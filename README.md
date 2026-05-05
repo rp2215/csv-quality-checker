@@ -6,7 +6,7 @@ CSV Data Quality Checker is a basic Python command-line project that analyses CS
 
 ## Features
 
-Current planned features:
+Implemented:
 
 - Load a CSV file
 - Count rows and columns
@@ -15,3 +15,24 @@ Current planned features:
 - Detect duplicate rows
 - Show data types
 - Generate a basic report
+
+To Do:
+
+- support for batch upload/ every csv file in folder
+- assign each column a quality score based on (missing values etc)
+- overall file quality score
+- charts to visually display num of errors
+- export report as .md or .txt
+- web interface 
+- num unque values per column
+- summaries for numeric columns:
+    - min
+    - max
+    - mean
+    - median
+- let user choose report name
+- configurable rules, user loads rules and csv file -> returns pass/fail for each column based on rules
+- schema validation
+
+
+
