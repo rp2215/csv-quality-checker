@@ -1,5 +1,6 @@
 from csv_loader import load_csv
 from quality_check import run_quality_checks
+from report_generator import display_report
 
 # test the CSV loader
 def main():
@@ -12,7 +13,7 @@ def main():
 
     #print(dataframe.head())
 
-    print (results)
+    display_report(results)
 
 
 if __name__ == "__main__":
