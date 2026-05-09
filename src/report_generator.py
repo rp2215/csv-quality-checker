@@ -36,9 +36,32 @@ def display_report(results, file_name=None):
         print(f"- {column}: {missing_percentage}%")
     
 
+    print("\nUnique Values:")
+
+    for column, unique_count in results["unique_values"].items():
+        print(f"- {column}: {unique_count}")
 
     print(f"\nDuplicate Rows: {results['duplicate_rows']}")
     print(f"Duplicate Row Percentage: {results['duplicate_percentage']}%")
+
+    print(f"\nEmpty Rows: {results['empty_rows']}")
+
+    print("\nEmpty Columns:")
+
+    if results["empty_columns"]:
+        for column in results["empty_columns"]:
+            print(f"- {column}")
+    else:
+        print("- None")
+
+    print("\nDuplicate Column Names:")
+
+    if results["duplicate_column_names"]:
+
+        for column in results["duplicate_column_names"]:
+            print(f"- {column}")
+    else:
+        print("- None")
 
     print("\nData Types:")
 
@@ -46,10 +69,28 @@ def display_report(results, file_name=None):
     for column, data_type in results["data_types"].items():
         print(f"- {column}: {data_type}")
 
+
+    print("\n Numeric Summaries:")
+
+    if results["numeric_summaries"]:
+        for column, summary in results["numeric_summaries"].items():
+            print(f"\n {column}:")
+            print(f"- Min: {summary['min']}")
+
+            print(f"- Max: {summary['max']}")
+
+            print(f"- Mean: {summary['mean']}")
+
+            print(f"- Median: {summary['median']}")
+    else:
+        print("- No numeric columns found")
+
+
     print("\nColumn Quality Scores:")
 
     for column, score in results["column_quality_scores"].items():
         print(f"- {column}: {score}%")
+
 
     print(f"\nOverall File Quality Score: {results['overall_quality_score']}%")
     print(f"Overall File Quality {results['overall_quality_label']}")
@@ -102,6 +143,7 @@ def build_markdown_report(results, file_name=None):
     lines.append(f"- Columns: {results['column_count']}")
     lines.append(f"- Duplicate Rows: {results['duplicate_rows']}")
     lines.append(f"- Duplicate Row Percentage: {results['duplicate_percentage']}%")
+    lines.append(f"- Empty Rows: {results['empty_rows']}")
     lines.append(f"- Overall File Quality Score: {results['overall_quality_score']}%")
     lines.append(f"- Overall File Quality: {results['overall_quality_label']}")
 
@@ -131,6 +173,38 @@ def build_markdown_report(results, file_name=None):
     
     lines.append("")
 
+    lines.append("## Unique Values")
+    lines.append("")
+
+    for column, unique_count in results["unique_values"].items():
+        lines.append(f"- {column}: {unique_count}")
+    
+    lines.append("")
+
+    lines.append("## Empty Columns")
+    lines.append("")
+
+    if results["empty_columns"]:
+        for column in results["empty_columns"]:
+            lines.append(f"- {column}")
+    else:
+        lines.append("- None")
+
+    lines.append("")
+
+    lines.append("## Duplicate Column Names")
+    lines.append("")
+
+    if results["duplicate_column_names"]:
+        for column in results["duplicate_column_names"]:
+            lines.append(f"- {column}")
+
+    else:
+        lines.append("- None")
+
+    lines.append("")
+
+
     lines.append("## Data Types")
     lines.append("")
 
@@ -138,6 +212,22 @@ def build_markdown_report(results, file_name=None):
         lines.append(f"- {column}: {data_type}")
 
     lines.append("")
+
+    lines.append("## Numeric Summaries")
+    lines.append("")
+
+    if results["numeric_summaries"]:
+        for column, summary in results["numeric_summaries"].items():
+            lines.append(f"### {column}")
+            lines.append("")
+            lines.append(f"- Min: {summary['min']}")
+            lines.append(f"- Max: {summary['max']}")
+            lines.append(f"- Mean: {summary['mean']}")
+            lines.append(f"- Median: {summary['median']}")
+            lines.append("")
+    else:
+        lines.append("- No numeric columns found")
+        lines.append("")
 
     lines.append("## Column Quality Scores")
     lines.append("")
@@ -153,7 +243,7 @@ def build_markdown_report(results, file_name=None):
     lines.append(f"- Rating: {results['overall_quality_label']}")
 
     lines.append("")
-    
+
     return"\n".join(lines) # join all lines into one .md string
 
 # Saves single report as .md file into reports/ folder

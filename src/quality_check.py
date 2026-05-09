@@ -35,6 +35,62 @@ def calculate_duplicate_row_percentage(dataframe):
 
     return round(duplicate_percentage,2)
 
+# get duplicate names detected from in csv_loader.py 
+def detect_duplicate_column_names(dataframe):
+    duplicate_column_names = dataframe.attrs.get("duplicate_column_names",[])
+    return duplicate_column_names
+
+# number of unique values in each column
+def count_unique_values(dataframe):
+
+    unique_counts = dataframe.nunique(dropna=True) # ignores missing values
+
+    return unique_counts.to_dict()
+
+# count rows where every value is missing
+def count_empty_rows(dataframe):
+
+    missing_values = dataframe.isnull() # missing values marked as True
+
+    empty_row_count = sum(missing_values.all(axis=1))
+
+    return int(empty_row_count)
+
+# count columns where every value is missing 
+def detect_empty_columns(dataframe):
+
+    empty_columns = []
+
+    for column in dataframe.columns:
+
+        missing_values = dataframe[column].isnull()
+        column_is_empty = missing_values.all()
+
+        if column_is_empty:
+            empty_columns.append(column)
+
+    return empty_columns
+
+# generates min, max, mean, median for numeric columns
+def get_numeric_summaries(dataframe):
+
+    numeric_dataframe = dataframe.select_dtypes(include="number")
+
+    numeric_summaries = {}
+
+    for column in numeric_dataframe.columns:
+
+        series = numeric_dataframe[column]
+
+        numeric_summaries[column] = {
+
+            "min": round(float(series.min()), 2),
+            "max": round(float(series.max()),2),
+            "mean": round(float(series.mean()),2),
+            "median":round(float(series.median()),2),
+        }
+    return numeric_summaries
+
 
 def calculate_column_quality_scores(dataframe):
 
@@ -48,7 +104,7 @@ def calculate_column_quality_scores(dataframe):
         score = max(score,0) # score cant be below 0
         score = round(score, 2)
         column_scores[column] = score
-        
+
     return column_scores
 
 def calculate_overall_quality_score(dataframe):
@@ -86,7 +142,7 @@ def get_quality_score_label(score):
 # Runs all quality checks and stores in dictionary
 def run_quality_checks(dataframe):
 
-    overall_qaulity_score = calculate_overall_quality_score(dataframe)
+    overall_quality_score = calculate_overall_quality_score(dataframe)
 
     results = {
         "row_count": count_rows(dataframe),
@@ -97,9 +153,14 @@ def run_quality_checks(dataframe):
         "data_types": get_data_types(dataframe),
         "missing_percentage": calculate_missing_value_percentages(dataframe),
         "duplicate_percentage": calculate_duplicate_row_percentage(dataframe),
+        "unique_values": count_unique_values(dataframe),
+        "numeric_summaries": get_numeric_summaries(dataframe),
+        "empty_rows": count_empty_rows(dataframe),
+        "empty_columns": detect_empty_columns(dataframe),
+        "duplicate_column_names": detect_duplicate_column_names(dataframe),
         "column_quality_scores": calculate_column_quality_scores(dataframe),
-        "overall_quality_score": overall_qaulity_score,
-        "overall_quality_label": get_quality_score_label(overall_qaulity_score)
+        "overall_quality_score": overall_quality_score,
+        "overall_quality_label": get_quality_score_label(overall_quality_score)
     }
 
     return results

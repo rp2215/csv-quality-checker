@@ -21,20 +21,25 @@ Implemented:
 - calculate column level quality scores
 - calculate overall file quality score 
 - display overall file quality rating
+- cli input path
+- summaries for numeric columns
 
 To Do:
 
 - charts to visually display num of errors
 - export report as .txt
+- export reports as .json
 - web interface 
 - num unque values per column
-- summaries for numeric columns:
-    - min
-    - max
-    - mean
-    - median
+   
+- warning messages with severity levels e.g. Datasets contains duplicate rows (Medium), Age column has more than 50% missing values (HIGH)
 - configurable rules, user loads rules and csv file -> returns pass/fail for each column based on rules
 - schema validation
+- recursive option for folders within folders
+- progress messages/ percentage during batch uploads
+- for batch uploads can output into a desired folder
+
+
 
 
 
