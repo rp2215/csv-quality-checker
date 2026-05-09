@@ -100,7 +100,7 @@ def build_markdown_report(results, file_name=None):
     lines.append("")
 
     for column, missing_count in results["missing_values"].items():
-        lines.append(f"- {column: {missing_count}}")
+        lines.append(f"- {column}: {missing_count}")
 
     lines.append("")
 

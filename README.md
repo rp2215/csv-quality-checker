@@ -16,13 +16,14 @@ Implemented:
 - Show data types
 - Generate a basic report
 - support for batch upload/ every csv file in folder
+- allow user to choose between termina report output, markdown report download, or both
 
 To Do:
 
 - assign each column a quality score based on (missing values etc)
 - overall file quality score
 - charts to visually display num of errors
-- export report as .md or .txt
+- export report as .txt
 - web interface 
 - num unque values per column
 - summaries for numeric columns:

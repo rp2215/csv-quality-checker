@@ -17,7 +17,7 @@ def load_csv(file_path):
     if path.suffix.lower() != ".csv":
         raise ValueError(f"File must be a CSV file")
     
-    if path.start().st.size == 0:
+    if path.stat().st_size == 0:
         raise ValueError(f"CSV file is empty: {file_path}")
     
     dataframe = pd.read_csv(path)
