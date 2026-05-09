@@ -48,8 +48,8 @@ def calculate_column_quality_scores(dataframe):
         score = max(score,0) # score cant be below 0
         score = round(score, 2)
         column_scores[column] = score
-
-        return column_scores
+        
+    return column_scores
 
 def calculate_overall_quality_score(dataframe):
 

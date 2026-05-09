@@ -101,6 +101,10 @@ def build_markdown_report(results, file_name=None):
     lines.append(f"- Rows: {results['row_count']}")
     lines.append(f"- Columns: {results['column_count']}")
     lines.append(f"- Duplicate Rows: {results['duplicate_rows']}")
+    lines.append(f"- Duplicate Row Percentage: {results['duplicate_percentage']}%")
+    lines.append(f"- Overall File Quality Score: {results['overall_quality_score']}%")
+    lines.append(f"- Overall File Quality: {results['overall_quality_label']}")
+
     lines.append("")
 
     lines.append("## Column Names")
@@ -119,6 +123,14 @@ def build_markdown_report(results, file_name=None):
 
     lines.append("")
 
+    lines.append("## Missing Value Percentages")
+    lines.append("")
+
+    for column, missing_percentage in results["missing_percentage"].items():
+        lines.append(f"- {column}: {missing_percentage}%")
+    
+    lines.append("")
+
     lines.append("## Data Types")
     lines.append("")
 
@@ -127,6 +139,21 @@ def build_markdown_report(results, file_name=None):
 
     lines.append("")
 
+    lines.append("## Column Quality Scores")
+    lines.append("")
+
+    for column, score in results["column_quality_scores"].items():
+        lines.append(f"- {column}: {score}%")
+    lines.append("")
+
+    lines.append("## Overall File Quality")
+    lines.append("")
+
+    lines.append(f"- Score: {results['overall_quality_score']}%")
+    lines.append(f"- Rating: {results['overall_quality_label']}")
+
+    lines.append("")
+    
     return"\n".join(lines) # join all lines into one .md string
 
 # Saves single report as .md file into reports/ folder

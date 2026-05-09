@@ -25,12 +25,19 @@ def get_arguments():
         help="Choose a custome name for the saved report"
     )
 
+    # user can choose file of folder to analyse
+    parser.add_argument(
+        "--input",
+        default="data",
+        help="Enter path to a CSV file or folder containing CSV files",
+    )
+
     return parser.parse_args()
 
 def main():
 
     args = get_arguments()
-    input_path = Path("data")
+    input_path = Path(args.input)
     output_folder = Path("reports")
     
     # check if folder
