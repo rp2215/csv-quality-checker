@@ -13,7 +13,7 @@ def find_csv_files(folder_path):
     if not folder.exists():
         raise FileNotFoundError(f" Folder Not Found: {folder_path}")
     
-    if folder.is_dir():
+    if not folder.is_dir():
         raise ValueError(f"Path is not a folder: {folder_path}")
     
     csv_files = sorted(folder.glob("*.csv")) # find every file with .csv extension
