@@ -1,3 +1,5 @@
+from pathlib import Path 
+
 # displays single report in terminal
 def display_report(results, file_name=None):
     
@@ -66,3 +68,78 @@ def display_batch_report(batch_results):
             print(f"Error: {file_result['error']}")
             print("-" * 30)
         
+# Builds .md report from quality check results
+def build_markdown_report(results, file_name=None):
+
+    lines = [] # store each line of report
+
+    lines.append("# CSV Data Quality Report")
+    lines.append("")
+
+    if file_name:
+        lines.append(f"**File:** {file_name}")
+        lines.append("")
+
+    lines.append("## Summary")
+    lines.append("")
+
+    lines.append(f"- Rows: {results['row_count']}")
+    lines.append(f"- Columns: {results['column_count']}")
+    lines.append(f"- Duplicate Rows: {results['duplicate_rows']}")
+    lines.append("")
+
+    lines.append("## Column Names")
+    lines.append("")
+
+    for column in results["column_names"]:
+        lines.append(f"- {column}")
+
+    lines.append("")
+
+    lines.append("## Missing Values")
+    lines.append("")
+
+    for column, missing_count in results["missing_values"].items():
+        lines.append(f"- {column: {missing_count}}")
+
+    lines.append("")
+
+    lines.append("## Data Types")
+    lines.append("")
+
+    for column, data_type in results["data_types"].items():
+        lines.append(f"- {column}: {data_type}")
+
+    lines.append("")
+
+    return"\n".join(lines) # join all lines into one .md string
+
+# Saves single report as .md file into reports/ folder
+def save_markdown_report(results, file_name, output_folder="reports"):
+
+    output_path = Path(output_folder)
+
+    output_path.mkdir(parents=True, exist_ok=True) # Create report folder if doesnt already exist
+
+    report_file_name = Path(file_name).stem + "_report.md" # use csv file name for report name
+
+    report_path = output_path/report_file_name # full output file path
+
+    # build report text and save to file
+    report_text = build_markdown_report(results, file_name)
+    report_path.write_text(report_text, encoding="utf-8")
+
+    return report_path
+
+# Saves every successful CSV file in batch result
+def save_batch_markdown_reports(batch_results, output_folder="reports"):
+
+    saved_paths = []
+
+    # for every file result in batch save successful ones
+    for file_result in batch_results:
+        if file_result["status"] == "success":
+
+            report_path = save_markdown_report(file_result["results"], file_result["file_name"], output_folder)
+            saved_paths.append(report_path)
+    return saved_paths

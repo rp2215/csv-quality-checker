@@ -1,6 +1,6 @@
 from csv_loader import load_csv
 from quality_check import run_quality_checks
-from report_generator import display_report, display_batch_report
+from report_generator import display_report, display_batch_report, save_markdown_report, save_batch_markdown_reports
 from batch_processor import process_csv_folder
 from pathlib import Path
 

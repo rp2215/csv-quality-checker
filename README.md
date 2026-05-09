@@ -15,10 +15,10 @@ Implemented:
 - Detect duplicate rows
 - Show data types
 - Generate a basic report
+- support for batch upload/ every csv file in folder
 
 To Do:
 
-- support for batch upload/ every csv file in folder
 - assign each column a quality score based on (missing values etc)
 - overall file quality score
 - charts to visually display num of errors
