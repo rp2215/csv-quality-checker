@@ -115,13 +115,18 @@ def build_markdown_report(results, file_name=None):
     return"\n".join(lines) # join all lines into one .md string
 
 # Saves single report as .md file into reports/ folder
-def save_markdown_report(results, file_name, output_folder="reports"):
+def save_markdown_report(results, file_name, output_folder="reports", report_name=None):
 
     output_path = Path(output_folder)
 
     output_path.mkdir(parents=True, exist_ok=True) # Create report folder if doesnt already exist
 
-    report_file_name = Path(file_name).stem + "_report.md" # use csv file name for report name
+    # check if user provided custom report name
+    if report_name:
+        report_file_name = Path(report_name).stem + ".md"
+
+    else:
+        report_file_name = Path(file_name).stem + "_report.md" # use csv file name for report name
 
     report_path = output_path/report_file_name # full output file path
 
@@ -132,7 +137,7 @@ def save_markdown_report(results, file_name, output_folder="reports"):
     return report_path
 
 # Saves every successful CSV file in batch result
-def save_batch_markdown_reports(batch_results, output_folder="reports"):
+def save_batch_markdown_reports(batch_results, output_folder="reports", report_name=None):
 
     saved_paths = []
 
@@ -140,6 +145,20 @@ def save_batch_markdown_reports(batch_results, output_folder="reports"):
     for file_result in batch_results:
         if file_result["status"] == "success":
 
-            report_path = save_markdown_report(file_result["results"], file_result["file_name"], output_folder)
+            if report_name:
+                unique_batch_report_name = Path(report_name).stem + "_" + Path(file_result["file_name"]).stem
+            
+            # no name provided use default name
+            else:
+                unique_batch_report_name = None
+
+            report_path = save_markdown_report(
+                file_result["results"],
+                file_result["file_name"],
+                output_folder,
+                unique_batch_report_name
+            )
+
             saved_paths.append(report_path)
+            
     return saved_paths

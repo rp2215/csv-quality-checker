@@ -18,6 +18,13 @@ def get_arguments():
         help="Choose whehter to show report in the terminal, save as file, or both",
     )
 
+    # optional report name argument
+    parser.add_argument(
+        "--report-name",
+        default=None,
+        help="Choose a custome name for the saved report"
+    )
+
     return parser.parse_args()
 
 def main():
@@ -35,7 +42,7 @@ def main():
             display_batch_report(batch_results)
 
         if args.mode in ["download", "both"]:
-            saved_reports = save_batch_markdown_reports(batch_results, output_folder)
+            saved_reports = save_batch_markdown_reports(batch_results, output_folder, args.report_name)
 
             print("\n Saved Reports:")
 
@@ -51,7 +58,7 @@ def main():
             display_report(results, input_path.name)
 
         if args.mode in ["download", "both"]:
-            report_path = save_markdown_report(results,input_path.name, output_folder)
+            report_path = save_markdown_report(results,input_path.name, output_folder, args.report_name)
 
             print(f"\nReport saved to: {report_path}")
 
