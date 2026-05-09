@@ -28,9 +28,17 @@ def display_report(results, file_name=None):
     # print each missing value count for each column
     for column, missing_count in results["missing_values"].items(): 
         print(f"- {column}: {missing_count}")
+    
+    print("\n Missing Value Percentages:")
+
+    # print each missing value percentage for each column
+    for column, missing_percentage in results["missing_percentage"].items(): 
+        print(f"- {column}: {missing_percentage}%")
+    
 
 
     print(f"\nDuplicate Rows: {results['duplicate_rows']}")
+    print(f"Duplicate Row Percentage: {results['duplicate_percentage']}%")
 
     print("\nData Types:")
 
@@ -38,6 +46,13 @@ def display_report(results, file_name=None):
     for column, data_type in results["data_types"].items():
         print(f"- {column}: {data_type}")
 
+    print("\nColumn Quality Scores:")
+
+    for column, score in results["column_quality_scores"].items():
+        print(f"- {column}: {score}%")
+
+    print(f"\nOverall File Quality Score: {results['overall_quality_score']}%")
+    print(f"Overall File Quality {results['overall_quality_label']}")
     print()
 
 # displays multiple reports in terminal
@@ -53,7 +68,7 @@ def display_batch_report(batch_results):
 
     failed_files = sum(1 for file_result in batch_results if file_result["status"] == "failed")
 
-    print(f"Successfule Files: {successful_files}")
+    print(f"Successful Files: {successful_files}")
 
     print(f"Failed Files: {failed_files}")
     
@@ -160,5 +175,5 @@ def save_batch_markdown_reports(batch_results, output_folder="reports", report_n
             )
 
             saved_paths.append(report_path)
-            
+
     return saved_paths
