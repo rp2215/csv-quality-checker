@@ -32,6 +32,12 @@ def get_arguments():
         help="Enter path to a CSV file or folder containing CSV files",
     )
 
+    parser.add_argument(
+        "--recursive",
+        action="store_true", # True when flag is used
+        help="Search for CSV files inside subfolders as well"
+    )
+
     return parser.parse_args()
 
 def main():
@@ -42,7 +48,7 @@ def main():
     
     # check if folder
     if input_path.is_dir():
-        batch_results = process_csv_folder(input_path)
+        batch_results = process_csv_folder(input_path,args.recursive)
 
         # check what output user wants
         if args.mode in ["terminal", "both"]:

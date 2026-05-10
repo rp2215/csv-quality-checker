@@ -6,7 +6,7 @@ from quality_check import run_quality_checks
 
 
 # Finds every CSV file inside a folder
-def find_csv_files(folder_path):
+def find_csv_files(folder_path, recursive=False):
 
     folder = Path(folder_path)
 
@@ -16,7 +16,12 @@ def find_csv_files(folder_path):
     if not folder.is_dir():
         raise ValueError(f"Path is not a folder: {folder_path}")
     
-    csv_files = sorted(folder.glob("*.csv")) # find every file with .csv extension
+    # finds CSV files in folder and subfolders
+    if recursive:
+        csv_files = sorted(folder.rglob("*.csv"))
+
+    else:
+        csv_files = sorted(folder.glob("*.csv")) # find every file with .csv extension in single folder
 
     if not csv_files:
         raise FileNotFoundError(f"No CSV files found in folder: {folder_path}")
@@ -53,9 +58,9 @@ def process_single_csv(file_path):
     return file_result
 
 # Processes every CSV file in a folder
-def process_csv_folder(folder_path):
+def process_csv_folder(folder_path, recursive=False):
 
-    csv_files = find_csv_files(folder_path)
+    csv_files = find_csv_files(folder_path, recursive)
 
     batch_results = []
 
