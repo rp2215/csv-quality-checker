@@ -60,15 +60,35 @@ def process_single_csv(file_path):
 # Processes every CSV file in a folder
 def process_csv_folder(folder_path, recursive=False):
 
+    folder = Path(folder_path)
+
     csv_files = find_csv_files(folder_path, recursive)
 
     batch_results = []
 
-    # Loop through every CSV file found and process returning results
-    for csv_file in csv_files:
+    total_files = len(csv_files)
+    print(f"\nFound {total_files} CSV file(s) to process")
+
+    # Loop through every CSV file found and process returning results wiht progress indicator
+    for index, csv_file in enumerate(csv_files, start=1):
+
+        completion_percentage = round((index / total_files) * 100)
+
+        relative_file_path = csv_file.relative_to(folder) # folder aware file path
+        
+        print(f"\nProcessing file {index}/{total_files} ({completion_percentage}%): {relative_file_path}") 
 
         file_result = process_single_csv(csv_file)
-
         batch_results.append(file_result)
+
+        if file_result["status"] == "success":
+            print(f"Completed file {index}/{total_files}: {relative_file_path}")  # Show success message
+
+        else:
+            # Show Failure and Error Message
+            print(f"Failed file {index}/{total_files}: {relative_file_path}")  
+            print(f"Error: {file_result['error']}")  
+
+    print(f"\nBatch processing complete: {total_files}/{total_files} files checked.") 
 
     return batch_results
