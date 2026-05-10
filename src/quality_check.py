@@ -1,4 +1,4 @@
-# Runs Checks On A DataFrame
+from warning_generator import generate_warnings
 
 def count_rows(dataframe):
     return dataframe.shape[0]
@@ -162,5 +162,7 @@ def run_quality_checks(dataframe):
         "overall_quality_score": overall_quality_score,
         "overall_quality_label": get_quality_score_label(overall_quality_score)
     }
+
+    results["warnings"] = generate_warnings(results) # store generated warnings
 
     return results

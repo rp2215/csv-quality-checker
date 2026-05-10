@@ -67,10 +67,3 @@ def process_csv_folder(folder_path):
         batch_results.append(file_result)
 
     return batch_results
-
-
-
-
-
-
-    

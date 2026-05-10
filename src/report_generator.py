@@ -94,6 +94,28 @@ def display_report(results, file_name=None):
 
     print(f"\nOverall File Quality Score: {results['overall_quality_score']}%")
     print(f"Overall File Quality {results['overall_quality_label']}")
+
+    print("\nWarnings:")
+
+    warnings = results.get("warnings", {})
+    warnings_found = False
+
+    # for each warning severity level print each message if exists
+    for severity in ["CRITICAL", "HIGH", "MEDIUM", "LOW"]:
+
+        messages = warnings.get(severity, [])
+
+        if messages:
+
+            warnings_found = True
+            print(f"\n{severity}:")
+
+            for message in messages:
+                print(f"- {message}")
+
+    if not warnings_found:
+        print("- No warnings found")
+
     print()
 
 # displays multiple reports in terminal
@@ -235,6 +257,31 @@ def build_markdown_report(results, file_name=None):
     for column, score in results["column_quality_scores"].items():
         lines.append(f"- {column}: {score}%")
     lines.append("")
+
+    lines.append("## Warnings")
+    lines.append("")
+
+    warnings = results.get("warnings", {})
+    warnings_found = False
+
+    for severity in ["CRITICAL", "HIGH", "MEDIUM", "LOW"]:
+
+        messages = warnings.get(severity, [])
+
+        if messages:
+            
+            warnings_found = True
+            lines.append(f"### {severity}")
+            lines.append("")
+
+            for message in messages:
+                lines.append(f"- {message}")
+
+            lines.append("")
+
+    if not warnings_found:
+        lines.append("- No warnings found")
+        lines.append("")
 
     lines.append("## Overall File Quality")
     lines.append("")

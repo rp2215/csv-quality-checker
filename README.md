@@ -23,6 +23,8 @@ Implemented:
 - display overall file quality rating
 - cli input path
 - summaries for numeric columns
+- num unque values per column
+- warning messages with severity levels
 
 To Do:
 
@@ -30,9 +32,6 @@ To Do:
 - export report as .txt
 - export reports as .json
 - web interface 
-- num unque values per column
-   
-- warning messages with severity levels e.g. Datasets contains duplicate rows (Medium), Age column has more than 50% missing values (HIGH)
 - configurable rules, user loads rules and csv file -> returns pass/fail for each column based on rules
 - schema validation
 - recursive option for folders within folders
