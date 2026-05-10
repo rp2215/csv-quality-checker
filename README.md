@@ -50,18 +50,18 @@ The tool can display reports in the terminal, save reports as Markdown files, or
 ### Warning System
 
 The tool generates warning messages with the following severity levels:
-    - CRITICAL
-    - HIGH
-    - MEDIUM
-    - LOW
+- CRITICAL
+- HIGH
+- MEDIUM
+- LOW
 
 Warnings are generated for issues such as:
-    - Columns with high missing value percentages
-    - Completely empty columns/rows
-    - Duplicate rows
-    - Duplicate column names
-    - Low value variation in columns
-    - Poor overall file quality scores
+- Columns with high missing value percentages
+- Completely empty columns/rows
+- Duplicate rows
+- Duplicate column names
+- Low value variation in columns
+- Poor overall file quality scores
 
 ---
 
@@ -120,7 +120,7 @@ The command line interface allows the user to choose how reports are produced:
 
 - `python main.py --input <folder_name>/example.csv --mode both`
 
-### Choose custom report name
+#### Choose custom report name
 
 - `python main.py --input <folder_name>/example.csv --mode download --report-name <custom_report_name>`
 
