@@ -1,42 +1,146 @@
 # CSV Data Quality Checker
 
+A Python command-line tool for checking the quality of CSV files and generating clear reports for review
+
+---
+
 ## Overview
 
-CSV Data Quality Checker is a basic Python command-line project that analyses CSV files and produces a simple data quality report.
+CSV Data Quality Checker helps identify common data quality issues in CSV datasets
+
+The tool can display reports in the terminal, save reports as Markdown files, or both. It also supports batch processing, recursive folder scanning, custom report names, and progress messages during larger batch runs.
+
+---
 
 ## Features
 
-Implemented:
+### CSV Analysis
 
-- Load a CSV file
+- Load and validate CSV files
 - Count rows and columns
 - Display column names
 - Count missing values per column
+- Calculate missing value percentages
 - Detect duplicate rows
-- Show data types
-- Generate a basic report
-- support for batch upload/ every csv file in folder
-- allow user to choose between termina report output, markdown report download, or both
-- optional user can choose report name
-- calculate column level quality scores
-- calculate overall file quality score 
-- display overall file quality rating
-- cli input path
-- summaries for numeric columns
-- num unque values per column
-- warning messages with severity levels
+- Calculate duplicate row percentages
+- Detect empty rows
+- Detect duplicate column names
+- Show data types for each column
+- Count unique values per column
+- Generate numeric summaries of columns:
+    - Minimum
+    - Maximum
+    - Mean
+    - Median
 
-To Do:
+---
 
-- charts to visually display num of errors
-- export report as .txt
-- export reports as .json
-- web interface 
-- configurable rules, user loads rules and csv file -> returns pass/fail for each column based on rules
-- schema validation
-- recursive option for folders within folders
-- progress messages/ percentage during batch uploads
-- for batch uploads can output into a desired folder
+### Quality Scoring
+
+- Calculate column level quality scores
+- Calculate an overall file quality score
+- Display an overall file quality rating:
+    - Excellent
+    - Good
+    - Needs Review
+    - Poor
+
+---
+
+### Warning System
+
+The tool generates warning messages with the following severity levels:
+    - CRITICAL
+    - HIGH
+    - MEDIUM
+    - LOW
+
+Warnings are generated for issues such as:
+    - Columns with high missing value percentages
+    - Completely empty columns/rows
+    - Duplicate rows
+    - Duplicate column names
+    - Low value variation in columns
+    - Poor overall file quality scores
+
+---
+
+### Batch Processing
+
+- Process every CSV file inside a selected folder with option for recursive scanning for subfolders
+- Displays progress messages during batch proecessing showing file count and completion percentage
+- Will continue to process remaining files even if one file fails
+- Save separate reports for each successfully processed files
+
+---
+
+### Report Output Options
+
+The command line interface allows the user to choose how reports are produced:
+
+- Display report in the terminal
+- Save report as a Markdown file
+- Display and save the report at the same time
+- Choose a custom report name
+- Automatically generate unique report names for batch outputs
+
+---
+
+## Tech Stack
+
+- Python 
+- pandas
+- argparse
+
+---
+
+## Usage
+
+#### Analyse a single CSV file
+
+- `python main.py --input <folder_name>/example.csv`
+
+#### Analyse a folder of CSV files
+
+- `python main.py --input <folder_name>`
+
+#### Analyse folders recursively
+
+- `python main.py --input <folder_name> --recursive`
+
+#### Show report in terminal
+
+- `python main.py --input <folder_name>/example.csv --mode terminal`
+
+#### Save report as a Markdown file
+
+- `python main.py --input <folder_name>/example.csv --mode download`
+
+#### Show report in terminal and download it
+
+- `python main.py --input <folder_name>/example.csv --mode both`
+
+### Choose custom report name
+
+- `python main.py --input <folder_name>/example.csv --mode download --report-name <custom_report_name>`
+
+
+---
+
+## Roadmap
+
+Planned improvements:
+
+- Add charts to visually display data quality issues
+- Export reports as `.txt`
+- Export reports as `.json`
+- Allow users to choose the output folder for saved reports
+- Add schema validation
+- Add configurable quality rules
+- Allow users to load a rules file and validate CSV files against it
+- Return pass/fail results for each column based on custom rules
+- Add a web interface
+
 
 
 
