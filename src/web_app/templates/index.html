@@ -9,6 +9,11 @@
 
     <p>Upload a CSV file to generate a data quality report.</p>
 
+    <!--display error if one exists (called Jinja template syntax)-->
+    {% if error %}
+        <p>{{ error }}</p>  
+    {% endif %}
+
     <form method="post" enctype="multipart/form-data">
 
         <label for="csv_file"> Choose CSV File:</label>
