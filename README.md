@@ -148,6 +148,11 @@ Planned web improvements
 
 - `python main.py --input <folder_name>/example.csv --mode download --report-name <custom_report_name>`
 
+## Usage Web App
+
+#### Run the Flask Web App
+
+- From project root folder run `PYTHONPATH=src python -m web_app.app` then open `http://127.0.0.1:5000` in browser
 
 ---
 
