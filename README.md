@@ -86,15 +86,39 @@ The command line interface allows the user to choose how reports are produced:
 
 ---
 
+### Web Interface
+
+The project includes an early Flask web interface that allows users to upload a CSV file trhough their browser and view a generated data quality report.
+
+Current web features
+
+- Upload a CSV file through an HTML form
+- Validate that the uploaded file is a CSV
+- Save uploaded files into a web uploads folder
+- Run existing CLI quality check logic
+- Display report results in browser
+
+Planned web improvements
+
+- Add styling with CSS
+- Add charts to display quality issues
+- support multiple file uploads
+- timestamp for saved uploads
+- add .md report downloads
+
+---
+
 ## Tech Stack
 
 - Python 
 - pandas
-- argparse
+- Flask
+- HTML
+
 
 ---
 
-## Usage
+## Usage CLI
 
 #### Analyse a single CSV file
 
@@ -139,10 +163,6 @@ Planned improvements:
 - Add configurable quality rules
 - Allow users to load a rules file and validate CSV files against it
 - Return pass/fail results for each column based on custom rules
-- Add a web interface
-
-
-
-
-
-
+- imporve web interface
+- add testing suite
+- add sample CSV files

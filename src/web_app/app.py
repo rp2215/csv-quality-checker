@@ -3,6 +3,10 @@ from flask import render_template # allows flask to load HTML files
 from flask import request # allows to read submitted form data
 from werkzeug.utils import secure_filename
 
+from csv_loader import load_csv
+
+from quality_check import run_quality_checks
+
 from pathlib import Path
 app = Flask(__name__)
 
@@ -37,10 +41,14 @@ def index():
 
         saved_path = UPLOAD_FOLDER / safe_uploaded_filename
 
+        # Save uploaded file and load/run quality checks
         uploaded_file.save(saved_path)
+        dataframe = load_csv(saved_path)
+        results = run_quality_checks(dataframe)
 
+        return render_template("report.html", file_name=safe_uploaded_filename, results=results)
         #return f"Uploaded file: {uploaded_file.filename}" # temp display
-        return f"Saved file to: {saved_path}"
+        #return f"Saved file to: {saved_path}"
 
     return render_template("index.html")
 
