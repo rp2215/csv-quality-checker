@@ -2,13 +2,19 @@
 
 A Python command-line tool for checking the quality of CSV files and generating clear reports for review
 
+The project supports both a CLI and a flask web interface
+
 ---
 
 ## Overview
 
 CSV Data Quality Checker helps identify common data quality issues in CSV datasets
 
-The tool can display reports in the terminal, save reports as Markdown files, or both. It also supports batch processing, recursive folder scanning, custom report names, and progress messages during larger batch runs.
+The tool can display generated reports in following formats:
+
+- In terminal
+- As a saved Markdown file
+- On the web interface
 
 ---
 
@@ -74,6 +80,54 @@ Warnings are generated for issues such as:
 
 ---
 
+### Custom Rules Validation 
+
+The tool supports loading a custom JSON rules file that validates CSV files against custom column expectations
+
+Current Supported Rules:
+
+- Required columns
+- Maximum allowed missing value percentage
+- Data type checking
+
+Rules validation returns pass/fail results for:
+
+- The overall dataset
+- Each configured column
+- Each rule check applied to those columns
+
+Example JSON rules file:
+
+```
+{
+    "columns": {
+        "id": {
+            "required": true,
+            "type": "integer",
+            "max_missing_percent": 0
+        },
+        "age": {
+            "required": true,
+            "type": "integer",
+            "max_missing_percent": 0
+        },
+        "joined": {
+            "required": true,
+            "type": "date",
+            "max_missing_percent": 0
+        }
+    }
+}
+```
+
+Planned custom rule improvements:
+
+- Minimum and Maxmimum numeric value validation
+- Allowed values validation
+- More data types validation support
+
+---
+
 ### Report Output Options
 
 The command line interface allows the user to choose how reports are produced:
@@ -83,28 +137,35 @@ The command line interface allows the user to choose how reports are produced:
 - Display and save the report at the same time
 - Choose a custom report name
 - Automatically generate unique report names for batch outputs
+- Include custom rules validation results in terminal and Markdown reports
 
 ---
 
 ### Web Interface
 
-The project includes an early Flask web interface that allows users to upload a CSV file trhough their browser and view a generated data quality report.
+The project includes a Flask web interface that allows users to upload CSV files trhough their browser and view a generated data quality report.
 
 Current web features
 
-- Upload a CSV file through an HTML form
-- Validate that the uploaded file is a CSV
+- Upload CSV files through an HTML form
+- Validate that uploaded files are CSV files
 - Save uploaded files into a web uploads folder
-- Run existing CLI quality check logic
-- Display report results in browser
-- timestamp for saved uploads
-- support multiple file uploads
+- Use timestamped filenames for saved uploads
+- Support multiple CSV file uploads
+- Save each batch upload into a timestamped batch folder
+- Reuse existing CLI batch processing logic
+- Display batch report results in the browser
+- Display successful and failed file counts
+- Display per-file report summaries
+- Display warning messages for each uploaded file
+- Basic CSS styling for the upload and report pages
 
 Planned web improvements
 
-- Add styling with CSS
 - Add charts to display quality issues
 - add .md report downloads
+- improve styling and responsive layout
+- add custom rule file upload/creation support
 
 ---
 
@@ -114,11 +175,15 @@ Planned web improvements
 - pandas
 - Flask
 - HTML
+- CSS
+- JSON
 
 
 ---
 
 ## Usage CLI
+
+Run commands from the project root folder
 
 #### Analyse a single CSV file
 
@@ -147,6 +212,14 @@ Planned web improvements
 #### Choose custom report name
 
 - `python main.py --input <folder_name>/example.csv --mode download --report-name <custom_report_name>`
+
+#### Analyse a single CSV file with a rules file
+
+- `PYTHONPATH=src python src/main.py --input <folder_name>/example.csv --rules <folder_name>/example.json`
+
+#### Analyse a folder with rules
+
+- `PYTHONPATH=src python src/main.py --input <folder_name> --rules <folder_name>/example.json`
 
 ## Usage Web App
 
