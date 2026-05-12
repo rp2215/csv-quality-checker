@@ -1,0 +1,179 @@
+
+* { box-sizing: border-box;}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #1f2933;
+}
+
+.page-container {
+    width: min(1100px, 92%);
+    margin: 0 auto;
+    padding: 40px 0;
+}
+
+.header-section {
+    margin-bottom: 24px;
+}
+
+/* main page title */
+.header-section h1 {
+    margin-bottom: 8px;
+    font-size: 36px;
+}
+
+/* intro paragraph */
+.header-section p {
+    margin: 0;
+    color: #52606d;
+    font-size: 18px;
+}
+
+/* apply to 3 card sections */
+.upload-card, .batch-summary-card,.card {
+    margin-bottom: 24px;
+    padding: 24px;
+    background: #ffffff;
+    border: 1px solid #d9e2ec;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+}
+
+/* remove from card headings*/
+.upload-card h2, .batch-summary-card h2, .card h2 {
+    margin-top: 0;
+}
+
+.upload-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.upload-form label {
+    font-weight: 700;
+}
+
+.upload-form input {
+    padding: 12px;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+}
+
+.upload-form button {
+    width: fit-content;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 8px;
+    background: #2563eb;
+    color: #ffffff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+
+.error-message {
+    padding: 12px;
+    background: #fee2e2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    color: #991b1b;
+}
+
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+}
+
+.summary-item {
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+.summary-label {
+    display: block;
+    margin-bottom: 6px;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.summary-value {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+
+.success-text {
+    color: #15803d;
+}
+
+.danger-text {
+    color: #b91c1c;
+}
+
+
+.file-card {
+    margin-top: 20px;
+}
+
+
+.file-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+
+.status-badge {
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.status-success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-failed {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.warnings-section {
+    margin-top: 12px;
+}
+
+.warning-group {
+    margin-bottom: 16px;
+    padding: 16px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 10px;
+}
+
+
+.warning-group h4 {
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
+.warning-group ul {
+    margin-bottom: 0;
+}
+
+.back-link a {
+    color: #2563eb;
+    font-weight: 700;
+}
+
+

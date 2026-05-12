@@ -3,25 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <title>CSV Data Quality Checker</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
 </head>
 <body>
-    <h1>CSV Data Quality Checker</h1>
 
-    <p>Upload a CSV file to generate a data quality report.</p>
+    <main class="page-container">
 
-    <!--display error if one exists (called Jinja template syntax)-->
-    {% if error %}
-        <p>{{ error }}</p>  
-    {% endif %}
+        <section class="header-section">
 
-    <form method="post" enctype="multipart/form-data">
+            <h1>CSV Data Quality Checker</h1>
 
-        <label for="csv_files"> Choose CSV File(s):</label>
+            <p>Upload one or more CSV files to generate data quality reports.</p>
 
-        <input type="file" id="csv_files" name="csv_files" accept=".csv" multiple>
+        </section>
 
-        <button type="submit"> Upload and Analayse</button>
-    </form>
+        <!-- Upload card-->
+        <section class="upload-card">
+
+            <h2> Upload CSV Files</h2>
+
+            <!--display error if one exists (called Jinja template syntax)-->
+            {% if error %}
+
+            <p class="error-message">
+                {{ error }}
+            </p>
+
+            {% endif %}
+
+            <!-- Upload form -->
+
+            <form method="post" enctype="multipart/form-data" class="upload-form">
+
+                <label for="csv_files"> Choose CSV File(s):</label>
+
+                <input type="file" id="csv_files" name="csv_files" accept=".csv" multiple>
+
+                <button type="submit"> Upload and Analayse</button>
+
+            </form>
+
+        </section>
+    </main>
+    
 </body>
 </html>
 

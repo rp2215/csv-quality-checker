@@ -2,100 +2,196 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
     <title>CSV Data Quality Report</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
 </head>
 <body>
-    <h1>CSV Data Quality Report</h1>
 
-    <h2>Batch Summary</h2>
+    <main class="page-container">
 
-    <ul>
-        <li>Total Files: {{ batch_results | length }}</li>
-        <li>Successful Files: {{ successful_files }}</li>
-        <li>Failed Files: {{ failed_files }}</li>
-    </ul>
+        <section class="header-section">
 
-    {% for file_result in batch_results %}
+            <h1>CSV Data Quality Batch Report</h1>
 
-        <hr>
+            <p> Review the quality results for each uploaded CSV file</p>
 
-        <h2>{{ file_result["file_name"] }}</h2>
+        </section>
 
-        {% if file_result["status"] == "failed" %}
+        <!-- Batch summary card -->
+        <section class="batch-summary-card">
 
-            <p><strong>Status:</strong> Failed</p>
+            <h2>Batch Summary</h2>
 
-            <p><strong>Error:</strong> {{ file_result["error"] }}</p>
+            <div class="summary-grid">
 
-        {% else %}
+                <div class="summary-item">
 
-            <p><strong>Status:</strong> Success</p>
+                    <span class="summary-label">Total Files</span>
+                    <span class="summary-value">
+                        {{ batch_results | length }}
+                    </span>
 
-            <h3>Summary</h3>
+                </div>
 
-            <ul>
-                <li>
-                    Rows:
-                    {{ file_result["results"]["row_count"] }}
-                </li>
+                <div class="summary-item">
+                    <span class="summary-label">Successful Files</span>
+                    <span class="summary-value success-text">
+                        {{ successful_files }}
+                    </span>
+                </div>
 
-                <li>
-                    Columns:
-                    {{ file_result["results"]["column_count"] }}
-                </li>
+                <div class="summary-item">
+                    <span class="summary-label">Failed Files</span>
+                    <span class="summary-value danger-text">
+                        {{ failed_files }}
+                    </span>
+                </div>
 
-                <li>
-                    Duplicate Rows:
-                    {{ file_result["results"]["duplicate_rows"] }}
-                </li>
+            </div>
 
-                <li>
-                    Duplicate Row Percentage:
-                    {{ file_result["results"]["duplicate_percentage"] }}%
-                </li>
+        </section>
 
-                <li>
-                    Empty Rows:
-                    {{ file_result["results"]["empty_rows"] }}
-                </li>
+        <!-- Loop through every processed file -->
+        {% for file_result in batch_results %}
 
-                <li>
-                    Overall Quality Score:
-                    {{ file_result["results"]["overall_quality_score"] }}%
-                </li>
+            <section class="card file-card">
 
-                <li>
-                    Overall Quality Rating:
-                    {{ file_result["results"]["overall_quality_label"] }}
-                </li>
-            </ul>
+                <div class="file-header">
 
-            <h3>Warnings</h3>
+                    <h2>{{ file_result["file_name"] }}</h2>
 
-            {% for severity, messages in
-                file_result["results"]["warnings"].items()
-            %}
+                    {% if file_result["status"] == "success" %}
 
-                {% if messages %}
+                        <span class="status-badge status-success">
+                            Success
+                        </span>
 
-                    <h4>{{ severity }}</h4>
+                    {% else %}
 
-                    <ul>
-                        {% for message in messages %}
-                            <li>{{ message }}</li>
+                        <span class="status-badge status-failed">
+                            Failed
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+                {% if file_result["status"] == "failed" %}
+
+                    <p class="error-message">
+                        {{ file_result["error"] }}
+                    </p>
+
+                {% else %}
+
+                    <h3>Summary</h3>
+
+                    <div class="summary-grid">
+
+                        <div class="summary-item">
+                            <span class="summary-label">Rows</span>
+                            <span class="summary-value">
+                                {{ file_result["results"]["row_count"] }}
+                            </span>
+                        </div>
+
+                        <div class="summary-item">
+                            <span class="summary-label">Columns</span>
+                            <span class="summary-value">
+                                {{ file_result["results"]["column_count"] }}
+                            </span>
+                        </div>
+
+                        <div class="summary-item">
+                            <span class="summary-label">Duplicate Rows</span>
+                            <span class="summary-value">
+                                {{ file_result["results"]["duplicate_rows"] }}
+                            </span>
+                        </div>
+
+                        <div class="summary-item">
+                            <span class="summary-label">
+                                Duplicate Percentage
+                            </span>
+                            <span class="summary-value">
+                                {{ file_result["results"]["duplicate_percentage"] }}%
+                            </span>
+                        </div>
+
+                        <div class="summary-item">
+                            <span class="summary-label">Empty Rows</span>
+                            <span class="summary-value">
+                                {{ file_result["results"]["empty_rows"] }}
+                            </span>
+                        </div>
+
+                        <div class="summary-item">
+                            <span class="summary-label">
+                                Overall Score
+                            </span>
+                            <span class="summary-value">
+                                {{ file_result["results"]["overall_quality_score"] }}%
+                            </span>
+                        </div>
+
+                        <div class="summary-item">
+                            <span class="summary-label">
+                                Overall Rating
+                            </span>
+                            <span class="summary-value">
+                                {{ file_result["results"]["overall_quality_label"] }}
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <h3>Warnings</h3>
+
+                    <div class="warnings-section">
+
+                        {% for severity, messages in
+                            file_result["results"]["warnings"].items()
+                        %}
+
+                            {% if messages %}
+
+                                <div class="warning-group">
+
+                                    <h4>{{ severity }}</h4>
+
+                                    <ul>
+                                        {% for message in messages %}
+
+                                            <li>{{ message }}</li>
+
+                                        {% endfor %}
+                                    </ul>
+
+                                </div>
+
+                            {% endif %}
+
                         {% endfor %}
-                    </ul>
+
+                    </div>
 
                 {% endif %}
 
-            {% endfor %}
+            </section>
 
-        {% endif %}
+        {% endfor %}
 
-    {% endfor %}
+        <!-- Link back to upload page -->
+        <p class="back-link">
+            <a href="{{ url_for('index') }}">
+                Check more CSV files
+            </a>
+        </p>
 
-    <p>
-        <a href="{{ url_for('index') }}">Check another CSV file</a>
-    </p>
+    </main>
+    
 </body>
 </html>
