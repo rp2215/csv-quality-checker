@@ -97,13 +97,13 @@ Current web features
 - Save uploaded files into a web uploads folder
 - Run existing CLI quality check logic
 - Display report results in browser
+- timestamp for saved uploads
+- support multiple file uploads
 
 Planned web improvements
 
 - Add styling with CSS
 - Add charts to display quality issues
-- support multiple file uploads
-- timestamp for saved uploads
 - add .md report downloads
 
 ---

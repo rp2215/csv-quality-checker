@@ -7,32 +7,91 @@
 <body>
     <h1>CSV Data Quality Report</h1>
 
-    <p><strong>File:</strong> {{ file_name }}</p>
-
-    <h2>Summary</h2>
+    <h2>Batch Summary</h2>
 
     <ul>
-        <li>Rows: {{ results["row_count"] }}</li>
-        <li>Columns: {{ results["column_count"] }}</li>
-        <li>Duplicate Rows: {{ results["duplicate_rows"] }}</li>
-        <li>Duplicate Row Percentage: {{ results["duplicate_percentage"] }}%</li>
-        <li>Empty Rows: {{ results["empty_rows"] }}</li>
-        <li>Overall Quality Score: {{ results["overall_quality_score"] }}%</li>
-        <li>Overall Quality Rating: {{ results["overall_quality_label"] }}</li>
+        <li>Total Files: {{ batch_results | length }}</li>
+        <li>Successful Files: {{ successful_files }}</li>
+        <li>Failed Files: {{ failed_files }}</li>
     </ul>
 
-    <h2>Warnings</h2>
+    {% for file_result in batch_results %}
 
-    {% for severity, messages in results["warnings"].items() %}
-        {% if messages %}
-            <h3>{{ severity }}</h3>
+        <hr>
+
+        <h2>{{ file_result["file_name"] }}</h2>
+
+        {% if file_result["status"] == "failed" %}
+
+            <p><strong>Status:</strong> Failed</p>
+
+            <p><strong>Error:</strong> {{ file_result["error"] }}</p>
+
+        {% else %}
+
+            <p><strong>Status:</strong> Success</p>
+
+            <h3>Summary</h3>
 
             <ul>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
+                <li>
+                    Rows:
+                    {{ file_result["results"]["row_count"] }}
+                </li>
+
+                <li>
+                    Columns:
+                    {{ file_result["results"]["column_count"] }}
+                </li>
+
+                <li>
+                    Duplicate Rows:
+                    {{ file_result["results"]["duplicate_rows"] }}
+                </li>
+
+                <li>
+                    Duplicate Row Percentage:
+                    {{ file_result["results"]["duplicate_percentage"] }}%
+                </li>
+
+                <li>
+                    Empty Rows:
+                    {{ file_result["results"]["empty_rows"] }}
+                </li>
+
+                <li>
+                    Overall Quality Score:
+                    {{ file_result["results"]["overall_quality_score"] }}%
+                </li>
+
+                <li>
+                    Overall Quality Rating:
+                    {{ file_result["results"]["overall_quality_label"] }}
+                </li>
             </ul>
+
+            <h3>Warnings</h3>
+
+            {% for severity, messages in
+                file_result["results"]["warnings"].items()
+            %}
+
+                {% if messages %}
+
+                    <h4>{{ severity }}</h4>
+
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+
+                {% endif %}
+
+            {% endfor %}
+
         {% endif %}
+
     {% endfor %}
 
     <p>

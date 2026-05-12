@@ -4,12 +4,11 @@ from flask import request # allows to read submitted form data
 from werkzeug.utils import secure_filename
 
 from datetime import datetime # for unique file timetstamps
-
-from csv_loader import load_csv
-
-from quality_check import run_quality_checks
-
 from pathlib import Path
+
+from batch_processor import process_csv_folder
+
+
 app = Flask(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -21,6 +20,61 @@ ALLOWED_EXTENSIONS = {"csv"}
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".",1)[1].lower() in ALLOWED_EXTENSIONS
+
+def create_timestamp():
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+    return timestamp
+
+# build a unique timestamped filename for uploaded files
+def create_timestamped_filename(original_filename):
+
+    safe_filename = secure_filename(original_filename)
+
+    file_stem = Path(safe_filename).stem
+    file_extension = Path(safe_filename).suffix
+
+    timestamp = create_timestamp()
+    timestamped_filename = f"{file_stem}_{timestamp}{file_extension}"
+
+    return timestamped_filename
+
+# save all valid uploaded files into one batch folder
+def save_uploaded_files(uploaded_files):
+
+    # create folder
+    batch_folder = UPLOAD_FOLDER / f"batch_{create_timestamp()}"
+    batch_folder.mkdir(parents=True,exist_ok=True)
+
+    rejected_files = []
+    saved_files = []
+
+    for uploaded_file in uploaded_files:
+        
+        original_filename = uploaded_file.filename
+
+        if original_filename == "":
+            continue
+
+        if not allowed_file(original_filename):
+            
+            rejected_files.append({
+                "file_name": original_filename,
+                "status": "failed",
+                "error": "Unsupported file type",
+            })
+
+            continue
+
+        saved_filename = create_timestamped_filename(original_filename)
+        saved_path = batch_folder / saved_filename
+
+        uploaded_file.save(saved_path)
+        saved_files.append(saved_path)
+
+    return batch_folder, saved_files, rejected_files 
+
+
     
 # route can handle page loads and from submissions
 @app.route("/", methods=["GET","POST"])
@@ -28,35 +82,33 @@ def index():
 
     if request.method == "POST":
         
-        if "csv_file" not in request.files:
-            return render_template("index.html", error="No file filed was submitted")
+        if "csv_files" not in request.files:
+            return render_template("index.html", error="No file field was submitted")
         
-        uploaded_file = request.files["csv_file"]
+        uploaded_files = request.files.getlist("csv_files")
 
-        if uploaded_file.filename == "":
-            return render_template("index.html", error="No file was selected")
+        batch_folder, saved_files, rejected_files = save_uploaded_files(uploaded_files) 
+
+        if not saved_files:
+            return render_template("index.html", error="No valid CSV files were selected")
         
-        if not allowed_file(uploaded_file.filename):
-            return render_template("index.html", error="Not Supported file type")
+        batch_results = process_csv_folder(batch_folder)
+        batch_results.extend(rejected_files) 
         
-        safe_uploaded_filename = secure_filename(uploaded_file.filename)
+        successful_files = sum(
+            1 
+            for file_result in batch_results 
+            if file_result["status"] == "success"
+        )
+        
+        failed_files = sum(
+            1
+            for file_result in batch_results 
+            if file_result["status"] == "failed"
+        )
 
-        # build a unique timestamped filename for uploaded files
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
-        file_stem = Path(safe_uploaded_filename).stem
-        file_extension = Path(safe_uploaded_filename).suffix
-        timestamped_filename = f"{file_stem}_{timestamp}{file_extension}"
-
-        saved_path = UPLOAD_FOLDER / timestamped_filename
-
-        # Save uploaded file and load/run quality checks
-        uploaded_file.save(saved_path)
-        dataframe = load_csv(saved_path)
-        results = run_quality_checks(dataframe)
-
-        return render_template("report.html", file_name=timestamped_filename, results=results)
-        #return f"Uploaded file: {uploaded_file.filename}" # temp display
-        #return f"Saved file to: {saved_path}"
+        return render_template("report.html",batch_results=batch_results, successful_files=successful_files,failed_files=failed_files)
+      
 
     return render_template("index.html")
 
