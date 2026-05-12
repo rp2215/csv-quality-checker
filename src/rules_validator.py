@@ -14,7 +14,7 @@ def load_rules_file(rules_file_path):
     if not path.is_file():
         raise ValueError(f"Path for rules is not a file: {rules_file_path}")
     
-    if path.suffix.lowe() != "json":
+    if path.suffix.lower() != ".json":
         raise ValueError("Rules file must be a .json file")
     
     if path.stat().st_size == 0:
@@ -22,7 +22,7 @@ def load_rules_file(rules_file_path):
     
     # Open and read JSON file
     with path.open("r", encoding="utf-8") as rules_file:
-        rules = json.load(rules)
+        rules = json.load(rules_file)
 
     # Validate contents of JSON file
     if "columns" not in rules:
@@ -65,7 +65,7 @@ def check_required_column(dataframe, column_name):
 # missing value percentage for one column
 def calculate_column_missing_percentage(dataframe, column_name):
 
-    missing_percentage = dataframe[column_name].isnull().mean * 100
+    missing_percentage = dataframe[column_name].isnull().mean() * 100
 
     return round(float(missing_percentage), 2)
 
@@ -224,7 +224,7 @@ def validate_column_rules(dataframe, column_name, column_rules):
 
     # cant proceed to other rule checks if doesnt exist stop early
     if not required_column_result["passed"]:
-        column_result["passed"] == False
+        column_result["passed"] = False
         return column_result
     
     column_validation_checks = [
@@ -246,14 +246,14 @@ def validate_column_rules(dataframe, column_name, column_rules):
         if not check_result["passed"]:
             column_result["passed"] = False
         
-        return column_result
+    return column_result
 
 # validate df using all rules
 def validate_dataframe_all_rules(dataframe, rules):
 
     dataframe_validation_result = {
         "overall_passed": True,
-        "column": {},
+        "columns": {},
     }
 
     column_rules = rules.get("columns", {})

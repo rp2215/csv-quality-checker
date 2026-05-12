@@ -1,9 +1,10 @@
 # Process Many CSV File Found In A Folder
 
 from pathlib import Path
+
 from csv_loader import load_csv
 from quality_check import run_quality_checks
-
+from rules_validator import validate_dataframe_all_rules
 
 # Finds every CSV file inside a folder
 def find_csv_files(folder_path, recursive=False):
@@ -29,7 +30,7 @@ def find_csv_files(folder_path, recursive=False):
     return csv_files
 
 # Process One CSV File
-def process_single_csv(file_path):
+def process_single_csv(file_path, rules=None):
 
     # Dict to store files results
     file_result = {
@@ -46,6 +47,13 @@ def process_single_csv(file_path):
 
         results = run_quality_checks(dataframe)
 
+        # run rule validation if rules have been added
+        if rules:
+            results["rules_validation"] = validate_dataframe_all_rules(dataframe, rules)
+        
+        else:
+            results["rules_validation"] = None
+
         file_result["results"] = results
 
     # Catch errors that occur during processing
@@ -58,7 +66,7 @@ def process_single_csv(file_path):
     return file_result
 
 # Processes every CSV file in a folder
-def process_csv_folder(folder_path, recursive=False):
+def process_csv_folder(folder_path, recursive=False, rules=None):
 
     folder = Path(folder_path)
 
@@ -78,7 +86,7 @@ def process_csv_folder(folder_path, recursive=False):
         
         print(f"\nProcessing file {index}/{total_files} ({completion_percentage}%): {relative_file_path}") 
 
-        file_result = process_single_csv(csv_file)
+        file_result = process_single_csv(csv_file,rules)
         batch_results.append(file_result)
 
         if file_result["status"] == "success":

@@ -1,5 +1,45 @@
 from pathlib import Path 
 
+# Should aim to replace each part of the report and .md with helper functions in future
+
+# helper for displaying custom rule results in terminal
+def display_rules_validation(results):
+
+    rules_validation = results.get("rules_validation")
+
+    # no rule file used
+    if not rules_validation:
+        return
+    
+    print("\nRules Validation:")
+
+    if rules_validation["overall_passed"]:
+        print("Overall Result: PASS")
+    
+    else:
+        print("Overall Result: FAIL")
+    
+    for column_name, column_result in rules_validation["columns"].items():
+
+        if column_result["passed"]:
+            column_status = "PASS"
+        else:
+            column_status = "FAIL"
+
+        # display overall column result
+        print(f"\n{column_name}:{column_status}")
+
+        # display outcome of each check performed
+        for check in column_result["checks"]:
+
+            if check["passed"]:
+                check_status = "PASS"
+            else:
+                check_status = "FAIL"
+            
+            print(f"- {check['rule']}: {check_status}")
+            print(f"- {check['message']}")
+    
 # displays single report in terminal
 def display_report(results, file_name=None):
     
@@ -116,6 +156,8 @@ def display_report(results, file_name=None):
     if not warnings_found:
         print("- No warnings found")
 
+    display_rules_validation(results)
+
     print()
 
 # displays multiple reports in terminal
@@ -145,7 +187,51 @@ def display_batch_report(batch_results):
             print(f"\n Failed to process: {file_result['file_name']}")
             print(f"Error: {file_result['error']}")
             print("-" * 30)
+
+# helper to add the custom rule validation results to the Markdown report
+def add_rules_validation_to_md_report(lines, results):
+
+    rules_validation = results.get("rules_validation")
+
+    # no rule file used
+    if not rules_validation:
+        return
+    
+    lines.append("## Rules Validation Results")
+    lines.append("")
+
+    if rules_validation["overall_passed"]:
+        lines.append("- Overall Result: PASS")
+
+    else:
+        lines.append("- Overall Result: FAIL")
+
+    lines.append("")
+
+    for column_name, column_result in rules_validation["columns"].items():
+
+        if column_result["passed"]:
+            column_status = "PASS"
         
+        else:
+            column_status= "FAIL"
+        
+        lines.append(f"### {column_name}: {column_status}")
+        lines.append("")
+
+        for check in column_result["checks"]:
+
+            if check["passed"]:
+                check_status = "PASS"
+            else:
+                check_status = "FAIL"
+            
+            lines.append(f"- {check['rule']}: {check_status}")
+            lines.append(f"- {check['message']}")
+        
+        lines.append("")
+
+                         
 # Builds .md report from quality check results
 def build_markdown_report(results, file_name=None):
 
@@ -282,6 +368,8 @@ def build_markdown_report(results, file_name=None):
     if not warnings_found:
         lines.append("- No warnings found")
         lines.append("")
+
+    add_rules_validation_to_md_report(lines,results)
 
     lines.append("## Overall File Quality")
     lines.append("")
