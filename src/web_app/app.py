@@ -31,8 +31,8 @@ def allowed_rules_file(filename):
     
     file_extension = filename.rsplit(".",1)[1].lower()
 
-    if file_extension == "json":
-        return True
+    # return true only for json files
+    return file_extension == "json"
 
 def create_timestamp():
 
@@ -111,7 +111,7 @@ def index():
         if rules_file and rules_file.filename != "":
 
             if not allowed_rules_file(rules_file.filename):
-                return render_template("index.hmtl", error="Rules file must be a .json file",)
+                return render_template("index.html", error="Rules file must be a .json file",)
             
             rules_filename = create_timestamped_filename(rules_file.filename)
 

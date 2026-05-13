@@ -209,3 +209,91 @@ body {
 .rule-column-card li {
     margin-bottom: 6px;
 }
+
+.build-rule-file-link {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
+}
+
+
+.build-rule-file-link p {
+    margin: 0 0 8px;
+    color: #64748b;
+}
+
+
+.build-rule-file-link a {
+    color: #2563eb;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+
+.build-rule-file-link a:hover {
+    text-decoration: underline;
+}
+
+
+.rule-builder-card {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 18px;
+    padding: 18px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+.rule-builder-card label {
+    font-weight: 700;
+}
+
+
+.rule-builder-card input,
+.rule-builder-card select {
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+}
+
+.button-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+
+.button-row button,
+.rule-builder-card button {
+    width: fit-content;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+
+.button-row button {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.secondary-button {
+    background: #475569 !important;
+    color: #ffffff;
+}
+
+.remove-button {
+    background: #dc2626;
+    color: #ffffff;
+}
+
+pre {
+    overflow-x: auto;
+    padding: 16px;
+    background: #0f172a;
+    color: #e2e8f0;
+    border-radius: 10px;
+}
