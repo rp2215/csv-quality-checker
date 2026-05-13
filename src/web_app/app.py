@@ -7,6 +7,7 @@ from datetime import datetime # for unique file timetstamps
 from pathlib import Path
 
 from batch_processor import process_csv_folder
+from rules_validator import load_rules_file
 
 
 app = Flask(__name__)
@@ -20,6 +21,18 @@ ALLOWED_EXTENSIONS = {"csv"}
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".",1)[1].lower() in ALLOWED_EXTENSIONS
+
+# check uploaded rules files is JSON file
+def allowed_rules_file(filename):
+
+    # must have extension
+    if "." not in filename:
+        return False
+    
+    file_extension = filename.rsplit(".",1)[1].lower()
+
+    if file_extension == "json":
+        return True
 
 def create_timestamp():
 
@@ -92,7 +105,27 @@ def index():
         if not saved_files:
             return render_template("index.html", error="No valid CSV files were selected")
         
-        batch_results = process_csv_folder(batch_folder)
+        rules = None
+        rules_file = request.files.get("rules_file")
+
+        if rules_file and rules_file.filename != "":
+
+            if not allowed_rules_file(rules_file.filename):
+                return render_template("index.hmtl", error="Rules file must be a .json file",)
+            
+            rules_filename = create_timestamped_filename(rules_file.filename)
+
+            rules_path = batch_folder / rules_filename
+            rules_file.save(rules_path)
+
+            try: 
+                rules = load_rules_file(rules_path)
+            
+            except Exception as error:
+
+                return render_template("index.html", error=str(error))
+        
+        batch_results = process_csv_folder(batch_folder,rules=rules)
         batch_results.extend(rejected_files) 
         
         successful_files = sum(

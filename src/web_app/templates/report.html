@@ -178,6 +178,61 @@
 
                     </div>
 
+                    {% set rules_validation = file_result["results"].get("rules_validation") %}
+
+                    {% if rules_validation %}
+
+                        <h3>Rules Validation</h3>
+
+                        {% if rules_validation["overall_passed"] %}
+
+                            <p class="rules-pass">Overall Result: PASS</p>
+
+                        {% else %}
+
+                            <p class="rules-fail">Overall Result: FAIL</p>
+                        
+                        {% endif %}
+
+                        <div class="rules-section">
+                            
+                            {% for column_name, column_result in rules_validation["columns"].items() %}
+
+                                <div class="rule-column_card">
+
+                                    {% if column_result["passed"] %}
+
+                                        <h4 class="rules-pass">{{column_name}}: PASS</h4>
+                                    
+                                    {% else %}
+
+                                        <h4 class="rules-fail">{{column_name}}: FAIL</h4>
+                                    {% endif %}
+
+                                    <ul>
+
+                                        {% for check in column_result["checks"] %}
+
+                                            <li>
+                                                {% if check["passed"] %}
+                                                    PASS:
+                                                {% else %}
+                                                    FAIL:
+                                                {% endif %}
+
+                                                {{check["rule"]}} - 
+                                                {{check["message"]}}
+
+                                            </li>
+                                        {% endfor %}
+
+                                    </ul>
+
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
                 {% endif %}
 
             </section>

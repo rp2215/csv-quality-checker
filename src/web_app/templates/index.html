@@ -33,13 +33,16 @@
 
             {% endif %}
 
+
             <!-- Upload form -->
 
             <form method="post" enctype="multipart/form-data" class="upload-form">
 
                 <label for="csv_files"> Choose CSV File(s):</label>
-
                 <input type="file" id="csv_files" name="csv_files" accept=".csv" multiple>
+
+                <label for="rules_file">Choose Rules File (Optional):</label>
+                <input type="file" id="rules_file" name="rules_file" accept=".json">
 
                 <button type="submit"> Upload and Analayse</button>
 

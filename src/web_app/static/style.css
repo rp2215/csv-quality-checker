@@ -176,4 +176,36 @@ body {
     font-weight: 700;
 }
 
+.rules-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 12px;
+}
 
+.rule-column-card {
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+.rule-column-card h4 {
+    margin-top: 0;
+}
+
+
+.rules-pass {
+    color: #15803d;
+    font-weight: 700;
+}
+
+
+.rules-fail {
+    color: #b91c1c;
+    font-weight: 700;
+}
+
+.rule-column-card li {
+    margin-bottom: 6px;
+}
