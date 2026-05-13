@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Create Rules File</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+</head>
+<body>
+
+    <main class="page-container">
+
+        <section class="header-section">
+
+            <h1>Create a Custom Rules File</h1>
+
+            <p>Build a JSON rules file by selecting validation options for each CSV column.</p>
+
+        </section>
+
+        <section class="card">
+
+            <h2>Column Rules</h2>
+
+            <p>Add one rule block for each CSV column you want to validate.</p>
+
+            <div id="rules-container"></div>
+
+            <div class="button-row">
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    onclick="addRuleBlock()"
+                >
+                    Add Column Rule
+                </button>
+
+                <button
+                    type="button"
+                    onclick="downloadRulesFile()"
+                >
+                    Download JSON Rules File
+                </button>
+
+            </div>
+
+        </section>
+
+        <section class="card">
+
+            <h2>JSON Preview</h2>
+
+            <pre id="rules-preview">{}</pre>
+
+        </section>
+
+        <p class="back-link">
+            <a href="{{ url_for('index') }}">
+                Back to CSV Upload
+            </a>
+        </p>
+
+    </main>
+
+    <script
+        src="{{ url_for('static', filename='rules_builder.js') }}"
+    ></script>
+
+</body>
+</html>

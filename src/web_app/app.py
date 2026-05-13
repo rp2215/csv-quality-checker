@@ -145,5 +145,13 @@ def index():
 
     return render_template("index.html")
 
+# custom rules builder page if user want to create .json file through browser
+@app.route("/rules-builder", methods=["GET"])
+def rules_builder():
+
+    return render_template("rules_builder.html")
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)
