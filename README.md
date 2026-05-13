@@ -159,13 +159,14 @@ Current web features
 - Display per-file report summaries
 - Display warning messages for each uploaded file
 - Basic CSS styling for the upload and report pages
+- add custom rule file upload/creation support
 
 Planned web improvements
 
 - Add charts to display quality issues
 - add .md report downloads
 - improve styling and responsive layout
-- add custom rule file upload/creation support
+
 
 ---
 
@@ -176,7 +177,7 @@ Planned web improvements
 - Flask
 - HTML
 - CSS
-- JSON
+- JavaScript
 
 
 ---
@@ -238,9 +239,6 @@ Planned improvements:
 - Export reports as `.json`
 - Allow users to choose the output folder for saved reports
 - Add schema validation
-- Add configurable quality rules
-- Allow users to load a rules file and validate CSV files against it
-- Return pass/fail results for each column based on custom rules
 - imporve web interface
 - add testing suite
 - add sample CSV files

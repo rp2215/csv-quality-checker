@@ -45,6 +45,30 @@ function addRuleBlock() {
             placeholder="Example: 0"
         >
 
+        <label> Minimum Value </label>
+
+        <input
+            type="number"
+            class="rule-min-value"
+            placeholder="Example: 0"
+        >
+
+        <label> Maximum Value </label>
+
+        <input
+            type="number"
+            class="rule-max-value"
+            placeholder="Example: 120"
+        >
+
+        <label> Allowed Values </label>
+
+        <input
+            type="text"
+            class="rule-allowed-values"
+            placeholder="Example: Active, Inactive, Pending"
+        >
+
         <button
             type="button"
             class="remove-button"
@@ -86,6 +110,9 @@ function buildRulesObject() {
         const requiredValue = ruleBlock.querySelector(".rule-required").value;
         const typeValue = ruleBlock.querySelector(".rule-type").value;
         const missingPercentValue = ruleBlock.querySelector(".rule-missing-percent").value;
+        const minValue = ruleBlock.querySelector(".rule-min-value").value;
+        const maxValue = ruleBlock.querySelector(".rule-max-value").value;
+        const allowedValuesText = ruleBlock.querySelector(".rule-allowed-values").value;
 
         const columnRules = {}; // rules for one column
 
@@ -97,6 +124,21 @@ function buildRulesObject() {
         }
         if (missingPercentValue !== ""){
             columnRules.max_missing_percent = Number (missingPercentValue);
+        }
+        if (minValue !== "") {
+            columnRules.min = Number(minValue);
+        }
+        if (maxValue !== "") {
+            columnRules.max = Number(maxValue);
+        }
+        if (allowedValuesText !== ""){
+
+            // split csv values into a list
+            const allowedValues = allowedValuesText.split(",").map((value) => value.trim()).filter((value) => value !== "");
+
+            if (allowedValues.length > 0){
+                columnRules.allowed_values = allowedValues;
+            }
         }
 
         rules.columns[columnName] = columnRules // add column to rules object
@@ -141,5 +183,7 @@ function downloadRulesFile(){
 
 }
 // update preview whenver user input changes
-document.addEventListener("input", updatePreview) 
+document.addEventListener("input", updatePreview); 
+document.addEventListener("change", updatePreview);
+
 addRuleBlock(); // on first load add blank

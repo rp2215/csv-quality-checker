@@ -42,9 +42,10 @@ def build_check_result(rule_name, passed, message):
         "message": message
     }
 
-# Check for required column rules retuning dict with pass/fail
-def check_required_column(dataframe, column_name):
+# Check whether column is required or optional
+def check_required_column(dataframe, column_name, column_rules):
 
+    required = column_rules.get("required", True)
     column_exists = column_name in dataframe.columns # check if name in df
 
     # pass
@@ -55,12 +56,20 @@ def check_required_column(dataframe, column_name):
             "Column exists",
         )
     
-    # fail
+    # fail if missing and required
+    if required:
+        return build_check_result(
+            "required",
+            False,
+            "Required Column is missing",
+        )
+
+    # pass if column missing but optional
     return build_check_result(
-        "required",
-        False,
-        "Column is missing",
-    )
+            "required",
+            True,
+            "Optional column is missing",
+        )
 
 # missing value percentage for one column
 def calculate_column_missing_percentage(dataframe, column_name):
@@ -103,7 +112,7 @@ def validate_type(dataframe, column_name,column_rules):
     if "type" not in column_rules:
         return None
     
-    expected_type = column_rules["type"]
+    expected_type = str(column_rules["type"]).strip().lower() 
 
     # ignore missing values
     series = dataframe[column_name].dropna()
@@ -204,9 +213,65 @@ def validate_type(dataframe, column_name,column_rules):
     )
 
 # check against min/max value rules
+def check_numeric_range(dataframe, column_name, column_rules):
+
+    if "min" not in column_rules and "max" not in column_rules:
+        return None
+    
+    series = dataframe[column_name].dropna() # ignore missing value for check
+    numeric_series = pd.to_numeric(series, errors="coerce")
+
+    invalid_numbers_count = int(numeric_series.isnull().sum()) # values that coudlnt be converted
+
+    # fail
+    if invalid_numbers_count > 0:
+        return build_check_result("numeric_range", False, f"Non numeric values found: {invalid_numbers_count}")
+
+    invalid_range_count = 0
+
+    if "min" in column_rules:
+
+        below_min_count = int((numeric_series < column_rules["min"]).sum())
+        invalid_range_count = invalid_range_count + below_min_count
+
+    if "max" in column_rules:
+
+        above_max_count = int((numeric_series > column_rules["max"]).sum())
+        invalid_range_count = invalid_range_count + above_max_count
+    
+    # fail
+    if invalid_range_count >= 1:
+        return build_check_result("numeric_range", False, f"Number of values outside allowed range: {invalid_range_count}")
+
+    # pass
+    return build_check_result("numeric_range", True, "All values are within allowed range",)
+
 
 # check against allowed values rules
+def check_allowed_values(dataframe, column_name, column_rules):
 
+    if "allowed_values" not in column_rules:
+        return None
+    
+    allowed_values = column_rules["allowed_values"]
+
+    # check allowed_values is a list
+    if not isinstance(allowed_values, list):
+        return build_check_result("allowed_values", False, "Specified allowed values must be a list")
+    
+    series = dataframe[column_name].dropna()
+
+    is_valid_value = series.isin(allowed_values)
+    is_invalid_value = ~is_valid_value
+
+    invalid_count = int(is_invalid_value.sum())
+
+    # fail
+    if invalid_count >= 1:
+        return build_check_result("allowed_values", False, f"Number of values outside allowed list: {invalid_count}")
+    
+    # pass
+    return build_check_result("allowed_values", True, "All values are in the allowed list")
 
 
 # Check if a column pass/fails for all given rules
@@ -219,7 +284,7 @@ def validate_column_rules(dataframe, column_name, column_rules):
     }
 
     # Perform required columns rules and store results
-    required_column_result = check_required_column(dataframe, column_name)
+    required_column_result = check_required_column(dataframe, column_name, column_rules)
     column_result["checks"].append(required_column_result)
 
     # cant proceed to other rule checks if doesnt exist stop early
@@ -227,9 +292,15 @@ def validate_column_rules(dataframe, column_name, column_rules):
         column_result["passed"] = False
         return column_result
     
+    # column is optional and missing stop without failing
+    if column_name not in dataframe.columns:
+        return column_result
+    
     column_validation_checks = [
         check_missing_percentage,
         validate_type,
+        check_numeric_range,
+        check_allowed_values,
     ]
 
     for column_validation_check in column_validation_checks:
