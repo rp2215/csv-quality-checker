@@ -1,5 +1,6 @@
 const rulesContainer = document.getElementById("rules-container");
 const rulesPreview = document.getElementById("rules-preview");
+const rulesFileNameInput = document.getElementById("rules-file-name")
 
 // add one blank rule to page
 function addRuleBlock() {
@@ -156,6 +157,33 @@ function updatePreview() {
     rulesPreview.textContent = JSON.stringify(rules,null,4);
 }
 
+// create safe JSON filename from user input
+function getRulesDownloadFileName(){
+
+    let fileName = rulesFileNameInput.value.trim();
+
+    // defualt if user input blank
+    if (fileName === ""){
+        fileName = "custom_rules";
+    }
+
+    // replace spaces with underscore and remove unsafe charcaters
+    fileName = fileName.replaceAll(" ","_")
+    fileName = fileName.replace(/[^a-zA-Z0-9_-]/g, "");
+
+    // revert to default if empty after safe operations
+    if (fileName === ""){
+        fileName = "custom_rules"
+    }
+
+    // add extension if user forgot
+    if (!fileName.endsWith(".json")){
+        fileName = `${fileName}.json`;
+    }
+
+    return fileName
+}
+
 // download as JSON file
 function downloadRulesFile(){
 
@@ -175,7 +203,7 @@ function downloadRulesFile(){
 
     // attach file to link and set name
     downloadLink.href = URL.createObjectURL(jsonFileBlob)
-    downloadLink.download = "custom_rules.json";
+    downloadLink.download = getRulesDownloadFileName();
 
     downloadLink.click(); // trigger donwload
 
