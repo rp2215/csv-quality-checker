@@ -198,7 +198,7 @@
                             
                             {% for column_name, column_result in rules_validation["columns"].items() %}
 
-                                <div class="rule-column_card">
+                                <div class="rule-column-card">
 
                                     {% if column_result["passed"] %}
 
@@ -233,8 +233,19 @@
                         </div>
                     {% endif %}
 
+                    {% if file_result.get("report_download_path") %}
+
+                    <p class="download-link">
+
+                        <a href="{{ url_for('download_report',report_path= file_result['report_download_path'])}}">
+                            Download Markdown Report
+                            </a>
+                    </p>
+                    {% endif %}
+
                 {% endif %}
 
+               
             </section>
 
         {% endfor %}

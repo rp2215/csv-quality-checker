@@ -1,6 +1,8 @@
 from flask import Flask
 from flask import render_template # allows flask to load HTML files
 from flask import request # allows to read submitted form data
+from flask import send_from_directory
+
 from werkzeug.utils import secure_filename
 
 from datetime import datetime # for unique file timetstamps
@@ -8,6 +10,7 @@ from pathlib import Path
 
 from batch_processor import process_csv_folder
 from rules_validator import load_rules_file
+from report_generator import save_markdown_report
 
 
 app = Flask(__name__)
@@ -16,7 +19,11 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 UPLOAD_FOLDER = PROJECT_ROOT / "data" / "web_uploads"
 UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
+
 ALLOWED_EXTENSIONS = {"csv"}
+
+WEB_REPORT_FOLDER = PROJECT_ROOT / "reports" / "web_reports"
+WEB_REPORT_FOLDER.mkdir(parents=True, exist_ok=True)
 
 
 def allowed_file(filename):
@@ -87,7 +94,29 @@ def save_uploaded_files(uploaded_files):
 
     return batch_folder, saved_files, rejected_files 
 
+# save markdown reports for successful web uploads
+def save_web_markdown_reports(batch_results):
 
+    report_batch_folder = WEB_REPORT_FOLDER / f"batch_{create_timestamp()}"
+    report_batch_folder.mkdir(parents=True, exist_ok=True)
+
+    for file_result in batch_results:
+
+        # skip unsuccessful
+        if file_result["status"] != "success":
+            continue
+
+        report_path = save_markdown_report(
+            file_result["results"],
+            file_result["file_name"],
+            report_batch_folder,
+        )
+
+        relative_report_path = report_path.relative_to(WEB_REPORT_FOLDER)
+
+        file_result["report_download_path"] = str(relative_report_path) # attach download path
+    
+    return batch_results
     
 # route can handle page loads and from submissions
 @app.route("/", methods=["GET","POST"])
@@ -125,8 +154,9 @@ def index():
 
                 return render_template("index.html", error=str(error))
         
-        batch_results = process_csv_folder(batch_folder,rules=rules)
+        batch_results = process_csv_folder(batch_folder,rules=rules) # process uploaded files
         batch_results.extend(rejected_files) 
+        batch_results = save_web_markdown_reports(batch_results) # save .md reports
         
         successful_files = sum(
             1 
@@ -151,6 +181,16 @@ def rules_builder():
 
     return render_template("rules_builder.html")
 
+# download generated .md report
+@app.route("/download-report/<path:report_path>")
+def download_report(report_path):
+
+    # send as file download
+    return send_from_directory(
+        WEB_REPORT_FOLDER,
+        report_path,
+        as_attachment=True,
+    )
 
 
 if __name__ == "__main__":
