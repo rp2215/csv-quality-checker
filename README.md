@@ -1,104 +1,80 @@
 # CSV Data Quality Checker
 
-A Python command-line tool for checking the quality of CSV files and generating clear reports for review
+![CI](https://github.com/rp2215/csv-quality-checker/actions/workflows/ci.yml/badge.svg)
 
-The project supports both a CLI and a flask web interface
+A Python based tool for analysing CSV files, identifying data quality issues, and generating clear reports with insightful information through both a command-line interface and a Flask web interface
 
 ---
 
 ## Overview
 
-CSV Data Quality Checker helps identify common data quality issues in CSV datasets
+CSV Data Quality Checker helps users review CSV datasets and identify common data quality issues 
 
-The tool can display generated reports in following formats:
+This project supports:
 
-- In terminal
-- As a saved Markdown file
-- On the web interface
+- CLI-based CSV analysis
+- Flask web uploads
+- Batch CSV processing
+- Custom JSON rule creation and validation
+- Markdown report downloads
+- Automated testing with pytest
+- CI checks with GitHub Actions and Ruff
 
 ---
 
-## Features
+## Key Features
 
 ### CSV Analysis
 
-- Load and validate CSV files
-- Count rows and columns
-- Display column names
-- Count missing values per column
-- Calculate missing value percentages
-- Detect duplicate rows
-- Calculate duplicate row percentages
-- Detect empty rows
-- Detect duplicate column names
-- Show data types for each column
-- Count unique values per column
-- Generate numeric summaries of columns:
-    - Minimum
-    - Maximum
-    - Mean
-    - Median
+The tool analyses CSV files and generate a structured quality report covering the main indicators of dataset quality
 
----
+Reports include:
 
-### Quality Scoring
-
-- Calculate column level quality scores
-- Calculate an overall file quality score
-- Display an overall file quality rating:
+- Dataset summary information
+- Missing value analysis
+- Duplicate row and column checks
+- Data type overview
+- Numeric column summaries
+- Column level quality scores
+- Overall file quality score
+- Quality rating:
     - Excellent
     - Good
     - Needs Review
     - Poor
-
----
-
-### Warning System
-
-The tool generates warning messages with the following severity levels:
-- CRITICAL
-- HIGH
-- MEDIUM
-- LOW
-
-Warnings are generated for issues such as:
-- Columns with high missing value percentages
-- Completely empty columns/rows
-- Duplicate rows
-- Duplicate column names
-- Low value variation in columns
-- Poor overall file quality scores
-
----
-
-### Batch Processing
-
-- Process every CSV file inside a selected folder with option for recursive scanning for subfolders
-- Displays progress messages during batch proecessing showing file count and completion percentage
-- Will continue to process remaining files even if one file fails
-- Save separate reports for each successfully processed files
+- Warning messages grouped by severity
 
 ---
 
 ### Custom Rules Validation 
 
-The tool supports loading a custom JSON rules file that validates CSV files against custom column expectations
+Users can validate CSV files against custom column expectations using a JSON rules file.
 
-Current Supported Rules:
+They can either:
 
-- Required columns
-- Maximum allowed missing value percentage
-- Data type checking
+- Upload an existing JSON rules file
+- Create a new rules file through the web interface using the built in rules builder and download the generated `.json` file
 
-Rules validation returns pass/fail results for:
+Rules validation returns pass/fail for:
 
 - The overall dataset
 - Each configured column
-- Each rule check applied to those columns
+- Each individual rule check with reason for failure
 
-Example JSON rules file:
+Supported rule types include:
 
-```
+- Required and optional columns
+- Maximum missing value percentages
+- Type Checks:
+    - Integer
+    - Date
+    - Boolean
+- Minimum and Maximum numeric values
+- A list of allowed values
+
+Example rules file:
+
+```json
 {
     "columns": {
         "id": {
@@ -120,53 +96,35 @@ Example JSON rules file:
 }
 ```
 
-Planned custom rule improvements:
+---
 
-- Minimum and Maxmimum numeric value validation
-- Allowed values validation
-- More data types validation support
+### Batch Processing
+
+The CLI and web interface both support batch CSV processing.
+
+Batch Processing allows:
+
+- Processing of all CSV files in selected folder or upload batch
+- Scanning of folders recursively to find all CSV files
+- Per file success or failure reports
+- Continuation of processing if a file in batch fails
+
 
 ---
 
-### Report Output Options
+### Flask Web Interface
 
-The command line interface allows the user to choose how reports are produced:
+The Flask web app allows user to analyse their CSV files through a browser reusing the same core processing logic as the CLI.
 
-- Display report in the terminal
-- Save report as a Markdown file
-- Display and save the report at the same time
-- Choose a custom report name
-- Automatically generate unique report names for batch outputs
-- Include custom rules validation results in terminal and Markdown reports
+Current web features:
 
----
-
-### Web Interface
-
-The project includes a Flask web interface that allows users to upload CSV files trhough their browser and view a generated data quality report.
-
-Current web features
-
-- Upload CSV files through an HTML form
-- Validate that uploaded files are CSV files
-- Save uploaded files into a web uploads folder
-- Use timestamped filenames for saved uploads
-- Support multiple CSV file uploads
-- Save each batch upload into a timestamped batch folder
-- Reuse existing CLI batch processing logic
-- Display batch report results in the browser
-- Display successful and failed file counts
-- Display per-file report summaries
-- Display warning messages for each uploaded file
-- Basic CSS styling for the upload and report pages
-- add custom rule file upload/creation support
-
-Planned web improvements
-
-- Add charts to display quality issues
-- add .md report downloads
-- improve styling and responsive layout
-
+- Upload one or more CSV files
+- Upload an optional JSON rules file
+- Create a custom rules JSON file through the browser
+- View batch results in the browser
+- Download Markdown reports
+- Choose custom report names
+- Use timestamped upload and report folders to avoid filename collisions
 
 ---
 
@@ -174,10 +132,13 @@ Planned web improvements
 
 - Python 
 - pandas
+- pytest
 - Flask
 - HTML
 - CSS
 - JavaScript
+- Ruff
+- GitHub Actions
 
 
 ---
@@ -202,11 +163,11 @@ Run commands from the project root folder
 
 - `python main.py --input <folder_name>/example.csv --mode terminal`
 
-#### Save report as a Markdown file
+#### Save a Markdown report
 
 - `python main.py --input <folder_name>/example.csv --mode download`
 
-#### Show report in terminal and download it
+#### Display and save a report
 
 - `python main.py --input <folder_name>/example.csv --mode both`
 
@@ -214,31 +175,56 @@ Run commands from the project root folder
 
 - `python main.py --input <folder_name>/example.csv --mode download --report-name <custom_report_name>`
 
-#### Analyse a single CSV file with a rules file
+#### Analyse with a custom rules file
 
 - `PYTHONPATH=src python src/main.py --input <folder_name>/example.csv --rules <folder_name>/example.json`
 
-#### Analyse a folder with rules
+---
 
-- `PYTHONPATH=src python src/main.py --input <folder_name> --rules <folder_name>/example.json`
+## Web App Usage
 
-## Usage Web App
+Run the Flask app from the project root:
 
-#### Run the Flask Web App
+`PYTHONPATH=src python -m web_app.app`
 
-- From project root folder run `PYTHONPATH=src python -m web_app.app` then open `http://127.0.0.1:5000` in browser
+Then open:
+
+`http://127.0.0.1:5000`
 
 ---
+
+## Testing
+
+The project uses pytest for automated testing.
+
+Run tests with:
+
+`PYTHONPATH=src pytest`
+
+---
+
+## CI Pipeline
+
+The project includes a GitHub Actions CI workflow
+
+The pipeline runs on push and pull requests to `main` branch
+
+It checks:
+
+- Ruff linting
+- pytest tests
+- CLI startup via `--help`
+
 
 ## Roadmap
 
 Planned improvements:
 
-- Add charts to visually display data quality issues
-- Export reports as `.txt`
-- Export reports as `.json`
-- Allow users to choose the output folder for saved reports
-- Add schema validation
-- imporve web interface
-- add testing suite
-- add sample CSV files
+- expand pytest suite
+- add Flask route tests
+- add charts for visualising quality issues
+- add upload size limits
+- add cleanup logic for old uploads and reports
+- add configurable warning thresholds
+- add screenshots/ short demo
+- add Docker support for easier setup
