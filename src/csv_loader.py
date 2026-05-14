@@ -34,7 +34,7 @@ def load_csv(file_path):
         raise ValueError(f"Path  {file_path} is not a file")
     
     if path.suffix.lower() != ".csv":
-        raise ValueError(f"File must be a CSV file")
+        raise ValueError("File must be a CSV file")
     
     if path.stat().st_size == 0:
         raise ValueError(f"CSV file is empty: {file_path}")

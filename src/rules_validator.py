@@ -26,7 +26,7 @@ def load_rules_file(rules_file_path):
 
     # Validate contents of JSON file
     if "columns" not in rules:
-        raise ValueError(f"Rules file must contain a 'columns' section")
+        raise ValueError("Rules file must contain a 'columns' section")
     
     if not isinstance(rules["columns"],dict):
         raise ValueError("'columns' section of JSON file must be a dictionary")
@@ -149,7 +149,7 @@ def validate_type(dataframe, column_name,column_rules):
         return build_check_result(
         "type",
         True,
-        f"No invalid integer values found"
+        "No invalid integer values found"
     )
 
     if expected_type == "date":
@@ -168,7 +168,7 @@ def validate_type(dataframe, column_name,column_rules):
         return build_check_result(
         "type",
         True,
-        f"No invalid date values found"
+        "No invalid date values found"
         )
     
     # values must match defined list of formats
@@ -202,7 +202,7 @@ def validate_type(dataframe, column_name,column_rules):
         return build_check_result(
         "type",
         True,
-        f"No invalid boolean values found"
+        "No invalid boolean values found"
         )
     
     # fallback for types not supported (yet)
