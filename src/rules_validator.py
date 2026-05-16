@@ -205,6 +205,36 @@ def validate_type(dataframe, column_name,column_rules):
         "No invalid boolean values found"
         )
     
+    # int or decimal
+    if expected_type == "number":
+
+        numeric_series = pd.to_numeric(series, errors="coerce")
+        invalid_count = int(numeric_series.isnull().sum())
+
+        # fail 
+        if invalid_count >=1 :
+            return build_check_result(
+                "type",
+                False,
+                f"Invalid numeric values found: {invalid_count}"
+            )
+        
+        # all values converted successfully
+        return build_check_result(
+            "type",
+            True,
+            "No invalid numeric values found"
+        )
+    
+    # CSV values all string so text will always pass
+    if expected_type == "text":
+
+        return build_check_result(
+            "type",
+            True,
+            "All values are text"
+        )
+    
     # fallback for types not supported (yet)
     return build_check_result(
         "type",
