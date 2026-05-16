@@ -25,6 +25,11 @@ ALLOWED_EXTENSIONS = {"csv"}
 WEB_REPORT_FOLDER = PROJECT_ROOT / "reports" / "web_reports"
 WEB_REPORT_FOLDER.mkdir(parents=True, exist_ok=True)
 
+# max upload per request
+MAX_UPLOAD_SIZE_MB = 16 
+
+# reject requests larger than limit (occurs before route logic runs)
+app.config["MAX_CONTENT_LENGTH"] = MAX_UPLOAD_SIZE_MB * 1024 * 1024
 
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".",1)[1].lower() in ALLOWED_EXTENSIONS
@@ -192,6 +197,13 @@ def download_report(report_path):
         as_attachment=True,
     )
 
+# handles requests that exceed upload limit returns styled UI instead of error page
+@app.errorhandler(413)
+def upload_too_large(error):
+    return render_template(
+        "index.html",
+        error= f"Upload too large. Max upload size is {MAX_UPLOAD_SIZE_MB} MB"
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)
