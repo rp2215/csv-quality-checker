@@ -220,11 +220,16 @@ It checks:
 
 Planned improvements:
 
-- expand pytest suite
-- add Flask route tests
-- add charts for visualising quality issues
-- add upload size limits
 - add cleanup logic for old uploads and reports
 - add configurable warning thresholds
 - add screenshots/ short demo
 - add Docker support for easier setup
+- overall quality gauge chart
+- regex pattern validation
+- data preview in report (first 5 lines)
+- .xlsx support
+- add unique rule
+- add date range rule
+- colour coded terminal output
+- drag and drop upload on web interface
+- dark mode toggle for interface
