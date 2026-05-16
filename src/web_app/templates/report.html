@@ -156,6 +156,15 @@
 
                     <h3>Quality Charts</h3>
                     
+                    <!-- overall quality score gauge -->
+                    <div>
+                        <h4 style="text-align:center;">Overall Quality Score</h4>
+                        <div class="gauge-container">
+                            <canvas id="gaugeChart{{ loop.index }}"></canvas>
+                        </div>
+                        <p class="gauge-label">{{ file_result["results"]["overall_quality_label"] }}</p>
+                    </div>
+
                     <div class="charts-grid">
 
                         <!-- per column quality scores-->
@@ -185,12 +194,19 @@
                         {{ file_result["results"]["missing_percentage"] | tojson }}
                     </script>
 
+                    <script type="application/json" id="overallScore{{ loop.index }}">
+                        {{ file_result["results"]["overall_quality_score"] | tojson }}
+                    </script>
+
+
                     <script>
                         (function(){
 
                             // Read JSON data from the data tags above and parse into JS objects
                             const qualityScores = JSON.parse(document.getElementById("qualityData{{ loop.index }}").textContent);
                             const missingPercentages = JSON.parse(document.getElementById("missingData{{ loop.index }}").textContent);
+
+                            const overallScore = JSON.parse(document.getElementById("overallScore{{loop.index}}").textContent);
 
                             const qualityLabels = Object.keys(qualityScores);
                             const qualityData = Object.values(qualityScores);
@@ -213,6 +229,8 @@
                                 getMissingColours(missingData),
                                 "Missing (%)"
                             );
+
+                            renderGaugeChart("gaugeChart{{loop.index}}", overallScore);
 
                         })();
                     </script>

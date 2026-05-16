@@ -45,3 +45,59 @@ function getMissingColours(percentages) {
         return "#2563eb";
     });
 }
+
+// render a half-doughnut guage showing overall quality scores
+function renderGaugeChart(canvasId, score) {
+
+    // pick colour based on score
+    let colour;
+    if (score >= 75) colour = "#16a34a";       // green — good
+    else if (score >= 50) colour = "#d97706";  // amber — needs attention
+    else colour = "#dc2626";                    // red — poor
+
+    // draws the score number inside gauge arc
+    const centreTextPlugin = {
+        id: "centreText",
+        afterDraw(chart) {
+            const { ctx, chartArea: { top, left, width, height } } = chart;
+            ctx.save();
+
+            // position text at bottom center of half circle
+            const centerX = left + width / 2;
+            const centerY = top + height / 0.9;
+
+            ctx.font = "bold 32px Arial";
+            ctx.fillStyle = colour;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(score + "%", centerX, centerY);
+
+            ctx.restore();
+        }
+    };
+
+    new Chart(document.getElementById(canvasId), {
+        type: "doughnut",
+        data: {
+            datasets: [{
+                // first segment is score, second is the empty remainder
+                data: [score, 100 - score],
+                backgroundColor: [colour, "#e5e7eb"],
+                borderWidth: 0,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            rotation: -90,       // start arc from the left side
+            circumference: 180,  // only draw half the circle
+            cutout: "75%",       // how thick the ring is
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: false },
+            }
+        },
+        plugins: [centreTextPlugin]
+    });
+}
+

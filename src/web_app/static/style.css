@@ -320,3 +320,18 @@ pre {
     gap: 24px;
     margin-bottom: 24px;
 }
+
+/* guage is fixed size and centers above bar charts */
+.gauge-container {
+    position: relative;
+    height: 160px;
+    width: 280px;
+    margin: 0 auto 8px;
+}
+
+.gauge-label {
+    text-align: center;
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 24px;
+}

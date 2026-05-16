@@ -224,7 +224,6 @@ Planned improvements:
 - add configurable warning thresholds
 - add screenshots/ short demo
 - add Docker support for easier setup
-- overall quality gauge chart
 - regex pattern validation
 - data preview in report (first 5 lines)
 - .xlsx support
