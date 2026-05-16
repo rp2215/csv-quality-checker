@@ -7,6 +7,12 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
+    <!-- Chart.js — used to render column quality and missing value charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="{{ url_for('static', filename='charts.js') }}"></script>
+
+
 </head>
 <body>
 
@@ -147,6 +153,70 @@
                         </div>
 
                     </div>
+
+                    <h3>Quality Charts</h3>
+                    
+                    <div class="charts-grid">
+
+                        <!-- per column quality scores-->
+                        <div>
+                            <h4>Column Quality Scores</h4>
+                            <div class="chart-container">
+                                    <canvas id="qualityChart{{loop.index}}"></canvas>
+                            </div>
+                        </div>
+
+                         <!-- per-column missing value percentages -->
+                        <div>
+                            <h4>Missing Value Percentages (%)</h4>
+                            <div class="chart-container">
+                                <canvas id="missingChart{{ loop.index }}"></canvas>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Data tags: type="application/json" tells the browser/IDE not to parse as JS -->
+                    <script type="application/json" id="qualityData{{ loop.index }}">
+                        {{ file_result["results"]["column_quality_scores"] | tojson }}
+                    </script>
+
+                    <script type="application/json" id="missingData{{ loop.index }}">
+                        {{ file_result["results"]["missing_percentage"] | tojson }}
+                    </script>
+
+                    <script>
+                        (function(){
+
+                            // Read JSON data from the data tags above and parse into JS objects
+                            const qualityScores = JSON.parse(document.getElementById("qualityData{{ loop.index }}").textContent);
+                            const missingPercentages = JSON.parse(document.getElementById("missingData{{ loop.index }}").textContent);
+
+                            const qualityLabels = Object.keys(qualityScores);
+                            const qualityData = Object.values(qualityScores);
+
+                            const missingLabels = Object.keys(missingPercentages);
+                            const missingData = Object.values(missingPercentages);
+
+                            renderBarChart(
+                                "qualityChart{{ loop.index }}",
+                                qualityLabels,
+                                qualityData,
+                                getQualityColours(qualityData),
+                                "Quality Score (%)"
+                            );
+
+                            renderBarChart(
+                                "missingChart{{ loop.index }}",
+                                missingLabels,
+                                missingData,
+                                getMissingColours(missingData),
+                                "Missing (%)"
+                            );
+
+                        })();
+                    </script>
+
 
                     <h3>Warnings</h3>
 

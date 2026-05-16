@@ -305,3 +305,18 @@ pre {
     border: 1px solid #cbd5e1;
     border-radius: 8px;
 }
+
+/* ensures chart height doesnt fill entire screen */
+.chart-container {
+    position: relative;
+    height: 280px;
+    margin-bottom: 24px;
+}
+
+/* on wider screens puts charts side by side */
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 24px;
+}
