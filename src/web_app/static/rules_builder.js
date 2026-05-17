@@ -113,6 +113,37 @@ function removeRuleBlock(button){
     updatePreview();
 }
 
+// read threshold inputs and return only the values the user has explicitly set
+function buildThresholdsObject() {
+
+    const thresholds = {};
+
+    // map each input element ID to the JSON key the backend expects
+    const thresholdFields = [
+        { id: "threshold-missing-critical", key: "missing_critical" },
+        { id: "threshold-missing-high",     key: "missing_high" },
+        { id: "threshold-missing-medium",   key: "missing_medium" },
+        { id: "threshold-missing-low",      key: "missing_low" },
+        { id: "threshold-quality-critical", key: "quality_critical" },
+        { id: "threshold-quality-high",     key: "quality_high" },
+        { id: "threshold-quality-medium",   key: "quality_medium" },
+        { id: "threshold-low-variation",    key: "low_variation_percent" },
+    ];
+
+    thresholdFields.forEach(({ id, key }) => {
+
+        const value = document.getElementById(id).value;
+
+        // blank use default
+        if (value !== "") {
+            thresholds[key] = Number(value);
+        }
+    });
+
+    return thresholds;
+}
+
+
 // turn UI selections into valid json structure
 function buildRulesObject() {
 
@@ -177,8 +208,14 @@ function buildRulesObject() {
             columnRules.date_max = dateMaxValue;
         }
 
-
         rules.columns[columnName] = columnRules // add column to rules object
+
+        // add thresholds section only if the user set at least one value
+        const thresholds = buildThresholdsObject();
+        if (Object.keys(thresholds).length > 0) {
+            rules.thresholds = thresholds;
+    }
+
 
     });
 
@@ -225,9 +262,12 @@ function downloadRulesFile(){
 
     const rules = buildRulesObject();
 
-    // check at least one column rule exists
-    if (Object.keys(rules.columns).length === 0){
-        alert("Add at least one column rule before downloading.")
+    // allow download if the user has set column rules, thresholds, or both
+    const hasColumns = Object.keys(rules.columns).length > 0;
+    const hasThresholds = rules.thresholds && Object.keys(rules.thresholds).length > 0;
+
+    if (!hasColumns && !hasThresholds) {
+        alert("Add at least one column rule or threshold value before downloading.")
         return;
     }
 

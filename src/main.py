@@ -4,6 +4,7 @@ from report_generator import display_report, display_batch_report, save_markdown
 from batch_processor import process_csv_folder
 from rules_validator import load_rules_file
 from rules_validator import validate_dataframe_all_rules
+from warning_generator import get_thresholds
 
 from pathlib import Path
 import argparse
@@ -82,7 +83,8 @@ def main():
     elif input_path.is_file():
 
         dataframe = load_csv(input_path)
-        results = run_quality_checks(dataframe)
+        thresholds = get_thresholds(rules)
+        results = run_quality_checks(dataframe, thresholds)
 
         if rules:
             results["rules_validation"] = validate_dataframe_all_rules(dataframe,rules)

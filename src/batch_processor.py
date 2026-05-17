@@ -4,6 +4,7 @@ from pathlib import Path
 
 from csv_loader import load_csv
 from quality_check import run_quality_checks
+from warning_generator import get_thresholds
 from rules_validator import validate_dataframe_all_rules
 
 # Finds every CSV file inside a folder
@@ -45,7 +46,8 @@ def process_single_csv(file_path, rules=None):
     try:
         dataframe = load_csv(file_path)
 
-        results = run_quality_checks(dataframe)
+        thresholds = get_thresholds(rules)
+        results = run_quality_checks(dataframe, thresholds)
 
         # run rule validation if rules have been added
         if rules:

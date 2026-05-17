@@ -140,7 +140,7 @@ def get_quality_score_label(score):
         return "Poor"
 
 # Runs all quality checks and stores in dictionary
-def run_quality_checks(dataframe):
+def run_quality_checks(dataframe, thresholds = None):
 
     overall_quality_score = calculate_overall_quality_score(dataframe)
 
@@ -163,6 +163,6 @@ def run_quality_checks(dataframe):
         "overall_quality_label": get_quality_score_label(overall_quality_score)
     }
 
-    results["warnings"] = generate_warnings(results) # store generated warnings
+    results["warnings"] = generate_warnings(results, thresholds) # store generated warnings
 
     return results

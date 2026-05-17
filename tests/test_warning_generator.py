@@ -203,3 +203,21 @@ def test_generate_warnings_returns_warnings_for_bad_data():
 
     # at least 1 critical warning should be returned
     assert len(warnings["CRITICAL"]) >= 1
+
+def test_custom_thresholds_change_warning_severity():
+
+    # default 30% missing is medium 
+    # if threshold raised to 40% defualt should no longer be active
+    results = {"missing_percentage": {"score": 30}}
+    warnings = create_empty_warnings()
+
+    # supply a custom threshold that raises the MEDIUM bar above 30%
+    custom_thresholds = {
+        **__import__("warning_generator").DEFAULT_THRESHOLDS,
+        "missing_medium": 40,   # only trigger MEDIUM if above 40%, not the default 25%
+    }
+
+    check_missing_values_warnings(results, warnings, thresholds=custom_thresholds)
+
+    # 30% is below the new MEDIUM threshold of 40 — should produce no MEDIUM warning
+    assert len(warnings["MEDIUM"]) == 0

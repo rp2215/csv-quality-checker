@@ -62,6 +62,97 @@
 
         <section class="card">
 
+            <h2>Warning Thresholds</h2>
+
+            <p>Override the percentage thresholds that trigger warning messages. Leave any field blank to keep its default value.</p>
+
+            <div class="threshold-group">
+
+                <h3>Missing Value Warnings</h3>
+
+                <div class="threshold-row">
+                    <label for="threshold-missing-critical">
+                        <span class="severity-badge badge-critical">CRITICAL</span>
+                        Column missing % at or above
+                    </label>
+                    <input type="number" id="threshold-missing-critical" min="0" max="100" step="0.01" placeholder="100">
+                </div>
+
+                <div class="threshold-row">
+                    <label for="threshold-missing-high">
+                        <span class="severity-badge badge-high">HIGH</span>
+                        Column missing % above
+                    </label>
+                    <input type="number" id="threshold-missing-high" min="0" max="100" step="0.01" placeholder="50">
+                </div>
+
+                <div class="threshold-row">
+                    <label for="threshold-missing-medium">
+                        <span class="severity-badge badge-medium">MEDIUM</span>
+                        Column missing % above
+                    </label>
+                    <input type="number" id="threshold-missing-medium" min="0" max="100" step="0.01" placeholder="25">
+                </div>
+
+                <div class="threshold-row">
+                    <label for="threshold-missing-low">
+                        <span class="severity-badge badge-low">LOW</span>
+                        Column missing % above
+                    </label>
+                    <input type="number" id="threshold-missing-low" min="0" max="100" step="0.01" placeholder="10">
+                </div>
+
+            </div>
+
+            <div class="threshold-group">
+
+                <h3>Overall Quality Score Warnings</h3>
+
+                <div class="threshold-row">
+                    <label for="threshold-quality-critical">
+                        <span class="severity-badge badge-critical">CRITICAL</span>
+                        Quality score below
+                    </label>
+                    <input type="number" id="threshold-quality-critical" min="0" max="100" step="1" placeholder="25">
+                </div>
+
+                <div class="threshold-row">
+                    <label for="threshold-quality-high">
+                        <span class="severity-badge badge-high">HIGH</span>
+                        Quality score below
+                    </label>
+                    <input type="number" id="threshold-quality-high" min="0" max="100" step="1" placeholder="50">
+                </div>
+
+                <div class="threshold-row">
+                    <label for="threshold-quality-medium">
+                        <span class="severity-badge badge-medium">MEDIUM</span>
+                        Quality score below
+                    </label>
+                    <input type="number" id="threshold-quality-medium" min="0" max="100" step="1" placeholder="75">
+                </div>
+
+            </div>
+
+            <div class="threshold-group">
+
+                <h3>Low Variation Warning</h3>
+
+                <div class="threshold-row">
+                    <label for="threshold-low-variation">
+                        <span class="severity-badge badge-low">LOW</span>
+                        Unique value % at or below
+                    </label>
+                    <input type="number" id="threshold-low-variation" min="0" max="100" step="0.01" placeholder="5">
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="card">
+
             <h2>JSON Preview</h2>
 
             <pre id="rules-preview">{}</pre>

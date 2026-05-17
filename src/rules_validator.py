@@ -25,9 +25,9 @@ def load_rules_file(rules_file_path):
     with path.open("r", encoding="utf-8") as rules_file:
         rules = json.load(rules_file)
 
-    # Validate contents of JSON file
-    if "columns" not in rules:
-        raise ValueError("Rules file must contain a 'columns' section")
+    # file would be useless if it didnt have at least columns or thresholds
+    if "columns" not in rules and "thresholds" not in rules:
+        raise ValueError("Rules file must contain a 'columns' or a 'thresholds' section")
     
     if not isinstance(rules["columns"],dict):
         raise ValueError("'columns' section of JSON file must be a dictionary")
