@@ -156,8 +156,6 @@ body {
 .warning-group {
     margin-bottom: 16px;
     padding: 16px;
-    background: #fffbeb;
-    border: 1px solid #fde68a;
     border-radius: 10px;
 }
 
@@ -171,6 +169,36 @@ body {
     margin-bottom: 0;
 }
 
+/* severity-specific colours */
+
+.warning-critical {
+    background: #fee2e2;
+    border: 1px solid #fecaca;
+}
+
+.warning-critical h4 { color: #991b1b; }
+
+.warning-high {
+    background: #ffedd5;
+    border: 1px solid #fed7aa;
+}
+
+.warning-high h4 { color: #9a3412; }
+
+.warning-medium {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+}
+
+.warning-medium h4 { color: #854d0e; }
+
+.warning-low {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+}
+
+.warning-low h4 { color: #1d4ed8; }
+
 .back-link a {
     color: #2563eb;
     font-weight: 700;
@@ -183,11 +211,32 @@ body {
     margin-top: 12px;
 }
 
+.check-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    list-style: none;
+    font-size: 14px;
+}
+
+.check-item .status-badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    white-space: nowrap;
+}
+
+
 .rule-column-card {
     padding: 16px;
     background: #f8fafc;
     border: 1px solid #e2e8f0;
     border-radius: 10px;
+}
+
+.rule-column-card ul{
+    margin: 0;
+    padding: 0;
 }
 
 .rule-column-card h4 {
@@ -407,3 +456,62 @@ pre {
 .badge-medium   { background: #fef9c3; color: #854d0e; }
 .badge-low      { background: #f0fdf4; color: #166534; }
 
+/* download report button  */
+.download-link {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 10px 18px;
+    border: 2px solid #2563eb;
+    border-radius: 8px;
+    color: #2563eb;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.download-link:hover {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+/* submit button loading state */
+.button-loading {
+    background: #93c5fd;  
+    cursor: not-allowed;
+}
+
+/* --- Custom File Input --- */
+
+.file-input-hidden {
+    display: none;
+}
+
+/* the visible styled button that the user actually clicks */
+.file-input-button {
+    display: inline-block;
+    padding: 10px 16px;
+    background: #475569;
+    color: #ffffff;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.file-input-button:hover {
+    background: #334155;
+}
+
+/* filename(s) displayed next to the button after selection */
+.file-input-name {
+    color: #64748b;
+    font-size: 14px;
+}
+
+/* wraps the button and filename label side by side */
+.file-input-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}

@@ -246,7 +246,7 @@
 
                             {% if messages %}
 
-                                <div class="warning-group">
+                                <div class="warning-group warning-{{ severity | lower}}">
 
                                     <h4>{{ severity }}</h4>
 
@@ -301,15 +301,14 @@
 
                                         {% for check in column_result["checks"] %}
 
-                                            <li>
+                                            <li class="check-item">
                                                 {% if check["passed"] %}
-                                                    PASS:
+                                                    <span class="status-badge status-success">PASS</span>
                                                 {% else %}
-                                                    FAIL:
+                                                    <span class="status-badge status-failed">FAIL</span>
                                                 {% endif %}
 
-                                                {{check["rule"]}} - 
-                                                {{check["message"]}}
+                                                {{check["rule"]}} - {{check["message"]}}
 
                                             </li>
                                         {% endfor %}
@@ -323,12 +322,13 @@
 
                     {% if file_result.get("report_download_path") %}
 
-                    <p class="download-link">
-
-                        <a href="{{ url_for('download_report',report_path= file_result['report_download_path'])}}">
-                            Download Markdown Report
-                            </a>
-                    </p>
+                    <a 
+                        class="download-link"
+                        href="{{ url_for('download_report',report_path= file_result['report_download_path'])}}">
+                    >
+                        Download Markdown Report
+                    </a>
+                    
                     {% endif %}
 
                 {% endif %}
