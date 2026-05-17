@@ -70,6 +70,27 @@ function addRuleBlock() {
             placeholder="Example: Active, Inactive, Pending"
         >
 
+        <label> Unique Values Only </label>
+
+        <select class="rule-unique">
+            <option value="">No unique check</option>
+            <option value="true">Yes — no duplicates allowed</option>
+        </select>
+
+        <label> Date Min (earliest allowed date) </label>
+
+        <input
+            type="date"
+            class="rule-date-min"
+        >
+
+        <label> Date Max (latest allowed date) </label>
+
+        <input
+            type="date"
+            class="rule-date-max"
+        >
+
         <button
             type="button"
             class="remove-button"
@@ -114,6 +135,9 @@ function buildRulesObject() {
         const minValue = ruleBlock.querySelector(".rule-min-value").value;
         const maxValue = ruleBlock.querySelector(".rule-max-value").value;
         const allowedValuesText = ruleBlock.querySelector(".rule-allowed-values").value;
+        const uniqueValue = ruleBlock.querySelector(".rule-unique").value;
+        const dateMinValue = ruleBlock.querySelector(".rule-date-min").value;
+        const dateMaxValue = ruleBlock.querySelector(".rule-date-max").value;
 
         const columnRules = {}; // rules for one column
 
@@ -141,6 +165,18 @@ function buildRulesObject() {
                 columnRules.allowed_values = allowedValues;
             }
         }
+
+        if (uniqueValue === "true") {
+            columnRules.unique = true;
+        }
+
+        if (dateMinValue !== "") {
+            columnRules.date_min = dateMinValue; 
+        }
+        if (dateMaxValue !== "") {
+            columnRules.date_max = dateMaxValue;
+        }
+
 
         rules.columns[columnName] = columnRules // add column to rules object
 

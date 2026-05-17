@@ -278,3 +278,168 @@ def test_pattern_validates_email_format():
     # "not-an-email" doesn't match — should fail
     assert result["overall_passed"] is False
     assert result["columns"]["email"]["passed"] is False
+
+# Unique Rule Tests
+
+def test_unique_passes_when_all_values_are_unique():
+
+    # all IDs are different — should pass
+    dataframe = pd.DataFrame({"id": [1, 2, 3, 4]})
+
+    rules = {"columns": {"id": {"required": True, "unique": True}}}
+
+    result = validate_dataframe_all_rules(dataframe, rules)
+
+    assert result["overall_passed"] is True
+    assert result["columns"]["id"]["passed"] is True
+
+
+def test_unique_fails_when_duplicates_exist():
+
+    # value 1 appears twice — should fail
+    dataframe = pd.DataFrame({"id": [1, 2, 1, 3]})
+
+    rules = {"columns": {"id": {"required": True, "unique": True}}}
+
+    result = validate_dataframe_all_rules(dataframe, rules)
+
+    assert result["overall_passed"] is False
+    assert result["columns"]["id"]["passed"] is False
+
+
+def test_unique_ignores_missing_values():
+
+    # two NaN values should not count as duplicates of each other
+    dataframe = pd.DataFrame({"id": [1, None, 2, None]})
+
+    rules = {"columns": {"id": {"required": True, "unique": True}}}
+
+    result = validate_dataframe_all_rules(dataframe, rules)
+
+    # remaining values 1 and 2 are unique — should pass
+    assert result["overall_passed"] is True
+    assert result["columns"]["id"]["passed"] is True
+
+
+def test_unique_skipped_when_rule_set_to_false():
+
+    # unique: false means the check is disabled entirely
+    dataframe = pd.DataFrame({"id": [1, 1, 1]})
+
+    rules = {"columns": {"id": {"required": True, "unique": False}}}
+
+    result = validate_dataframe_all_rules(dataframe, rules)
+
+    # duplicates ignored because rule is off — should pass
+    assert result["overall_passed"] is True
+    assert result["columns"]["id"]["passed"] is True
+
+
+# Date Range Tests
+
+def test_date_range_passes_when_all_dates_in_range():
+
+    # all dates fall within 2024
+    dataframe = pd.DataFrame({
+        "signup_date": ["2024-01-01", "2024-06-15", "2024-12-31"]
+    })
+
+    rules = {
+        "columns": {
+            "signup_date": {
+                "required": True,
+                "date_min": "2024-01-01",
+                "date_max": "2024-12-31",
+            }
+        }
+    }
+
+    result = validate_dataframe_all_rules(dataframe, rules)
+
+    assert result["overall_passed"] is True
+    assert result["columns"]["signup_date"]["passed"] is True
+
+
+def test_date_range_fails_when_date_before_min():
+
+    # 2023-12-31 is before the 2024-01-01 lower bound
+    dataframe = pd.DataFrame({
+        "signup_date": ["2023-12-31", "2024-06-15"]
+    })
+
+    rules = {
+        "columns": {
+            "signup_date": {"required": True, "date_min": "2024-01-01"}
+        }
+    }
+
+    result = validate_dataframe_all_rules(dataframe, rules)
+
+    assert result["overall_passed"] is False
+    assert result["columns"]["signup_date"]["passed"] is False
+
+
+def test_date_range_fails_when_date_after_max():
+
+    # 2025-01-01 is after the 2024-12-31 upper bound
+    dataframe = pd.DataFrame({
+        "signup_date": ["2024-06-15", "2025-01-01"]
+    })
+
+    rules = {
+        "columns": {
+            "signup_date": {"required": True, "date_max": "2024-12-31"}
+        }
+    }
+
+    result = validate_dataframe_all_rules(dataframe, rules)
+
+    assert result["overall_passed"] is False
+    assert result["columns"]["signup_date"]["passed"] is False
+
+
+def test_date_range_fails_for_non_date_values():
+
+    # "not-a-date" cannot be parsed — check should fail clearly rather than crash
+    dataframe = pd.DataFrame({
+        "signup_date": ["2024-01-01", "not-a-date"]
+    })
+
+    rules = {
+        "columns": {
+            "signup_date": {
+                "required": True,
+                "date_min": "2024-01-01",
+                "date_max": "2024-12-31",
+            }
+        }
+    }
+
+    result = validate_dataframe_all_rules(dataframe, rules)
+
+    assert result["overall_passed"] is False
+    assert result["columns"]["signup_date"]["passed"] is False
+
+
+def test_date_range_ignores_missing_values():
+
+    # None should be skipped — only the two present dates are checked
+    dataframe = pd.DataFrame({
+        "signup_date": ["2024-06-01", None, "2024-09-15"]
+    })
+
+    rules = {
+        "columns": {
+            "signup_date": {
+                "required": True,
+                "date_min": "2024-01-01",
+                "date_max": "2024-12-31",
+            }
+        }
+    }
+
+    result = validate_dataframe_all_rules(dataframe, rules)
+
+    # both present dates are valid — should pass
+    assert result["overall_passed"] is True
+    assert result["columns"]["signup_date"]["passed"] is True

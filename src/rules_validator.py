@@ -342,6 +342,78 @@ def check_allowed_values(dataframe, column_name, column_rules):
     # pass
     return build_check_result("allowed_values", True, "All values are in the allowed list")
 
+# check that all non-null values in the column are unique (no duplicates)
+def check_unique(dataframe, column_name, column_rules):
+
+    if not column_rules.get("unique", False):
+        return None
+
+    series = dataframe[column_name].dropna()  # null values are ignored — they don't count as duplicates
+
+    # keep=False marks every copy of a duplicated value as True, not just the second occurrence
+    duplicate_mask = series.duplicated(keep=False)
+    duplicate_count = int(duplicate_mask.sum())
+
+    if duplicate_count >= 1:
+        return build_check_result(
+            "unique",
+            False,
+            f"Duplicate values found: {duplicate_count} affected rows"
+        )
+
+    return build_check_result(
+        "unique",
+        True,
+        "All values are unique"
+    )
+
+
+# check that date values in a column fall within a specified date range
+def check_date_range(dataframe, column_name, column_rules):
+
+    # skip if neither bound is provided
+    if "date_min" not in column_rules and "date_max" not in column_rules:
+        return None
+
+    series = dataframe[column_name].dropna()  # missing values are ignored
+
+    # attempt to parse all present values as dates
+    date_series = pd.to_datetime(series, errors="coerce")
+    unparseable_count = int(date_series.isnull().sum())
+
+    # fail early if any values can't be parsed — they can't be range-checked
+    if unparseable_count > 0:
+        return build_check_result(
+            "date_range",
+            False,
+            f"Non-date values found that cannot be range-checked: {unparseable_count}"
+        )
+
+    out_of_range_count = 0
+
+    # check lower bound if provided
+    if "date_min" in column_rules:
+        date_min = pd.to_datetime(column_rules["date_min"])  # parse the rule value itself to datetime
+        out_of_range_count += int((date_series < date_min).sum())
+
+    # check upper bound if provided
+    if "date_max" in column_rules:
+        date_max = pd.to_datetime(column_rules["date_max"])  # parse the rule value itself to datetime
+        out_of_range_count += int((date_series > date_max).sum())
+
+    if out_of_range_count >= 1:
+        return build_check_result(
+            "date_range",
+            False,
+            f"Date values outside allowed range: {out_of_range_count}"
+        )
+
+    return build_check_result(
+        "date_range",
+        True,
+        "All date values are within the allowed range"
+    )
+
 
 # Check if a column pass/fails for all given rules
 def validate_column_rules(dataframe, column_name, column_rules):
@@ -371,6 +443,8 @@ def validate_column_rules(dataframe, column_name, column_rules):
         check_numeric_range,
         check_allowed_values,
         check_pattern,
+        check_unique,
+        check_date_range,
     ]
 
     for column_validation_check in column_validation_checks:
