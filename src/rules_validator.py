@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 import pandas as pd
+import re # used for regex pattern validation
 
 # Load and validate contents of JSON rules file
 def load_rules_file(rules_file_path):
@@ -276,6 +277,44 @@ def check_numeric_range(dataframe, column_name, column_rules):
     # pass
     return build_check_result("numeric_range", True, "All values are within allowed range",)
 
+# check that all values in a column match a user-defined regex pattern (email, postcodes etc)
+def check_pattern(dataframe, column_name, column_rules):
+
+    # rule not provided
+    if "pattern" not in column_rules:
+        return None
+
+    pattern = column_rules["pattern"]
+
+    # check pattern is valid regex before applying
+    try:
+        compiled_pattern = re.compile(pattern)
+    except re.error:
+        return build_check_result(
+            "pattern",
+            False,
+            f"Invalid regex pattern: {pattern}"
+        )
+
+    series = dataframe[column_name].dropna().astype(str)
+    is_invalid = series.apply(lambda value: compiled_pattern.fullmatch(value) is None)
+
+    invalid_count = int(is_invalid.sum())
+
+    # fail
+    if invalid_count >= 1:
+        return build_check_result(
+            "pattern",
+            False,
+            f"Values not matching pattern '{pattern}': {invalid_count}"
+        )
+
+    return build_check_result(
+        "pattern",
+        True,
+        f"All values match pattern '{pattern}'"
+    )
+
 
 # check against allowed values rules
 def check_allowed_values(dataframe, column_name, column_rules):
@@ -331,6 +370,7 @@ def validate_column_rules(dataframe, column_name, column_rules):
         validate_type,
         check_numeric_range,
         check_allowed_values,
+        check_pattern,
     ]
 
     for column_validation_check in column_validation_checks:

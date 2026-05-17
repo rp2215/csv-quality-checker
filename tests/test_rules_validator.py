@@ -164,3 +164,117 @@ def test_type_text_passes_with_mixed_content():
     # text type should always pass
     assert result["overall_passed"] is True
     assert result["columns"]["notes"]["passed"] is True
+
+
+# Check Pattern Tests
+
+def test_pattern_passes_when_all_values_match():
+
+    # all names letters and spaces only
+    dataframe = pd.DataFrame({
+        "name": ["Alice Smith", "Bob Jones", "Charlie"],
+    })
+
+    rules = {
+        "columns": {
+            "name": {
+                "required": True,
+                "pattern": "^[A-Za-z ]+$",
+            }
+        }
+    }
+
+    result = validate_dataframe_all_rules(dataframe, rules)
+
+    assert result["overall_passed"] is True
+    assert result["columns"]["name"]["passed"] is True
+
+
+def test_pattern_fails_when_values_dont_match():
+
+    # letters only pattern should reject "Alice123"
+    dataframe = pd.DataFrame({
+        "name": ["Alice", "Bob", "Alice123"],
+    })
+
+    rules = {
+        "columns": {
+            "name": {
+                "required": True,
+                "pattern": "^[A-Za-z ]+$",
+            }
+        }
+    }
+
+    result = validate_dataframe_all_rules(dataframe, rules)
+
+    assert result["overall_passed"] is False
+    assert result["columns"]["name"]["passed"] is False
+
+
+def test_pattern_ignores_missing_values():
+
+    # NaN values should be skipped
+    dataframe = pd.DataFrame({
+        "name": ["Alice", None, "Bob"],
+    })
+
+    rules = {
+        "columns": {
+            "name": {
+                "required": True,
+                "pattern": "^[A-Za-z ]+$",
+            }
+        }
+    }
+
+    result = validate_dataframe_all_rules(dataframe, rules)
+
+    # "NaN value should not cause failure
+    assert result["overall_passed"] is True
+    assert result["columns"]["name"]["passed"] is True
+
+
+def test_pattern_fails_for_invalid_regex():
+
+    dataframe = pd.DataFrame({
+        "name": ["Alice", "Bob"],
+    })
+
+    rules = {
+        "columns": {
+            "name": {
+                "required": True,
+                "pattern": "[invalid(",  # invalid regex
+            }
+        }
+    }
+
+    result = validate_dataframe_all_rules(dataframe, rules)
+
+    # should return failure not a crash
+    assert result["overall_passed"] is False
+    assert result["columns"]["name"]["passed"] is False
+
+
+def test_pattern_validates_email_format():
+
+    # validate an email column against an email regex
+    dataframe = pd.DataFrame({
+        "email": ["alice@example.com", "bob@test.org", "not-an-email"],
+    })
+
+    rules = {
+        "columns": {
+            "email": {
+                "required": True,
+                "pattern": r"^[\w.+-]+@[\w-]+\.[\w.]+$",
+            }
+        }
+    }
+
+    result = validate_dataframe_all_rules(dataframe, rules)
+
+    # "not-an-email" doesn't match — should fail
+    assert result["overall_passed"] is False
+    assert result["columns"]["email"]["passed"] is False
