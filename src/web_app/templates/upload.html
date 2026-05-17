@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Files — CSV Analyser</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+
+    <nav class="navbar">
+
+        <div class="navbar">
+
+            <a href="{{ url_for('index') }}" class="navbar-logo">CSV <span>Analyser</span></a>
+            <a href="{{ url_for('upload') }}" class="navbar-upload-btn">Upload Files</a>
+
+        </div>
+    </nav>
+
+    <main class="page-container">
+
+        <section class="header-section">
+
+            <h1>Upload CSV Files</h1>
+            <p>Select one or more CSV files to analyse. Optionally attach a rules file to validate your data against custom expectations.</p>
+
+        </section>
+
+        <!-- Upload card-->
+        <section class="upload-card">
+
+            <!--display error if one exists -->
+            {% if error %}
+
+                <p class="error-message"> {{ error }} </p>
+
+            {% endif %}
+
+            <!-- Upload form -->
+
+            <form method="post" enctype="multipart/form-data" class="upload-form">
+
+                <label> Choose CSV File(s):</label>
+
+                <div class="file-input-row">
+
+                    <input type="file" id="csv_files" name="csv_files" accept=".csv" multiple class="file-input-hidden">
+                    
+                    <label for="csv_files" class="file-input-button">Browse Files</label>
+
+                    <!-- updated by JS when files are picked -->
+                    <span class="file-input-name" id="csv-file-name">No files chosen</span>
+
+                </div>
+
+                <label>Rules File (Optional):</label>
+
+                <div class="file-input-row">
+
+                    <input type="file" id="rules_file" name="rules_file" accept=".json" class="file-input-hidden">
+
+                    <label for="rules_file" class="file-input-button">Browse Files</label>
+
+                    <span class="file-input-name" id="rules-file-name">No file chosen</span>
+
+                </div>
+
+                <button type="submit" id="submit-button">Upload and Analyse</button>
+
+            </form>
+
+            <!-- takes to rules file builder page -->
+            
+            <div class="build-rule-file-link">
+
+                <p>Don't have a rules JSON file?</p>
+
+                <a href="{{ url_for('rules_builder') }}"> Create a custom file here</a>
+
+            </div>
+
+        </section>
+    </main>
+
+
+    <script>
+
+        const form = document.querySelector(".upload-form");
+        const submitButton = document.getElementById("submit-button");
+
+        // update filename display when CSV files are selected
+        document.getElementById("csv_files").addEventListener("change", function () {
+
+            const label = document.getElementById("csv-file-name");
+
+            if (this.files.length === 0) {
+                label.textContent = "No files chosen";
+            } else if (this.files.length === 1) {
+                label.textContent = this.files[0].name;
+            } else {
+                label.textContent = `${this.files.length} files selected`;
+            }
+        });
+
+        // update filename display when rules file is selected
+        document.getElementById("rules_file").addEventListener("change", function () {
+
+            const label = document.getElementById("rules-file-name");
+            label.textContent = this.files.length > 0 ? this.files[0].name : "No file chosen";
+        });
+
+        // disable button and show loading state on submit
+        form.addEventListener("submit", function () {
+            submitButton.disabled = true;
+            submitButton.textContent = "Analysing...";
+            submitButton.classList.add("button-loading");
+        });
+
+    </script>
+</body>
+</html>

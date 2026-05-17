@@ -122,22 +122,27 @@ def save_web_markdown_reports(batch_results):
         file_result["report_download_path"] = str(relative_report_path) # attach download path
     
     return batch_results
-    
-# route can handle page loads and from submissions
-@app.route("/", methods=["GET","POST"])
+
+# landing page
+@app.route("/", methods=["GET"])
 def index():
+    return render_template("index.html")
+    
+# dedicated upload page shows form and processes submissions
+@app.route("/upload", methods=["GET","POST"])
+def upload():
 
     if request.method == "POST":
         
         if "csv_files" not in request.files:
-            return render_template("index.html", error="No file field was submitted")
+            return render_template("upload.html", error="No file field was submitted")
         
         uploaded_files = request.files.getlist("csv_files")
 
         batch_folder, saved_files, rejected_files = save_uploaded_files(uploaded_files) 
 
         if not saved_files:
-            return render_template("index.html", error="No valid CSV files were selected")
+            return render_template("upload.html", error="No valid CSV files were selected")
         
         rules = None
         rules_file = request.files.get("rules_file")
@@ -145,7 +150,7 @@ def index():
         if rules_file and rules_file.filename != "":
 
             if not allowed_rules_file(rules_file.filename):
-                return render_template("index.html", error="Rules file must be a .json file",)
+                return render_template("upload.html", error="Rules file must be a .json file",)
             
             rules_filename = create_timestamped_filename(rules_file.filename)
 
@@ -157,7 +162,7 @@ def index():
             
             except Exception as error:
 
-                return render_template("index.html", error=str(error))
+                return render_template("upload.html", error=str(error))
         
         batch_results = process_csv_folder(batch_folder,rules=rules) # process uploaded files
         batch_results.extend(rejected_files) 
@@ -178,7 +183,7 @@ def index():
         return render_template("report.html",batch_results=batch_results, successful_files=successful_files,failed_files=failed_files)
       
 
-    return render_template("index.html")
+    return render_template("upload.html")
 
 # custom rules builder page if user want to create .json file through browser
 @app.route("/rules-builder", methods=["GET"])
@@ -201,7 +206,7 @@ def download_report(report_path):
 @app.errorhandler(413)
 def upload_too_large(error):
     return render_template(
-        "index.html",
+        "upload.html",
         error= f"Upload too large. Max upload size is {MAX_UPLOAD_SIZE_MB} MB"
     )
 

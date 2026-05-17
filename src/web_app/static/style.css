@@ -4,7 +4,7 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #f4f6f8;
+    background: #ffffff;
     color: #1f2933;
 }
 
@@ -515,3 +515,164 @@ pre {
     align-items: center;
     gap: 12px;
 }
+
+/* --- Navbar --- */
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.navbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: min(1100px, 92%);
+    margin: 0 auto;
+    padding: 14px 0;
+}
+
+.navbar-logo {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1f2933;
+    letter-spacing: -0.02em;
+}
+
+/* indigo accent on the second word of the logo */
+.navbar-logo span {
+    color: #6366f1;
+}
+
+.navbar-upload-btn {
+    padding: 10px 20px;
+    background: #6366f1;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 14px;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.navbar-upload-btn:hover {
+    background: #4f46e5;
+}
+
+
+/* --- Hero --- */
+
+.hero {
+    padding: 80px 0 48px;
+    text-align: center;
+}
+
+.hero-title {
+    margin: 0 0 16px;
+    font-size: 52px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    color: #1f2933;
+}
+
+/* indigo accent line of the headline */
+.hero-accent {
+    color: #6366f1;
+}
+
+.hero-subtitle {
+    margin: 0 auto 40px;
+    max-width: 520px;
+    color: #64748b;
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+
+/* --- Features Section --- */
+
+.features-section {
+    padding: 64px 0;
+    text-align: center;
+    border-top: 1px solid #f1f5f9;
+}
+
+.features-label {
+    margin: 0 0 10px;
+    color: #6366f1;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.features-heading {
+    margin: 0 0 40px;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1f2933;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 32px;
+    text-align: left;
+}
+
+.feature-item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* icon tile — matches HQCSV's rounded square with indigo background */
+.feature-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: #eef2ff;
+    border-radius: 10px;
+    font-size: 20px;
+}
+
+.feature-item h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1f2933;
+}
+
+.feature-item p {
+    margin: 0;
+    font-size: 14px;
+    color: #64748b;
+    line-height: 1.6;
+}
+
+.hero-cta {
+    display: inline-block;
+    padding: 14px 32px;
+    background: #6366f1;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 16px;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.hero-cta:hover {
+    background: #4f46e5;
+}
+
+/* navbar logo as a link */
+a.navbar-logo {
+    text-decoration: none;
+    color: #1f2933;
+}
+
