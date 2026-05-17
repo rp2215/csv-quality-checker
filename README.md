@@ -226,5 +226,6 @@ Planned improvements:
 - data preview in report (first 5 lines)
 - .xlsx support
 - colour coded terminal output
-- drag and drop upload on web interface
 - dark mode toggle for interface
+- only show rules validation on report if rules file uploaded
+- allow selection of folder on web interface to recursivley batch process

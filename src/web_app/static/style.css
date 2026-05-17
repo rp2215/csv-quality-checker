@@ -676,3 +676,170 @@ a.navbar-logo {
     color: #1f2933;
 }
 
+/* --- Upload Page --- */
+
+
+.upload-page {
+    background: #f4f6f8;
+    min-height: 100vh;
+}
+
+.upload-page-container {
+    display: flex;
+    justify-content: center;
+    padding: 60px 16px;
+}
+
+
+.drop-zone-card {
+    width: 100%;
+    max-width: 680px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(15, 23, 42, 0.08);
+    overflow: hidden;
+}
+
+
+.drop-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 72px 40px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+/* highlight when file is dragged over */
+.drop-zone.drag-over {
+    background: #eef2ff;
+}
+
+.drop-zone-icon {
+    margin-bottom: 16px;
+    color: #94a3b8;
+}
+
+.drop-zone-title {
+    margin: 0 0 8px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1f2933;
+}
+
+.drop-zone-subtitle {
+    margin: 0 0 20px;
+    font-size: 14px;
+    color: #64748b;
+}
+
+.drop-zone-filename {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #64748b;
+    min-height: 18px;
+}
+
+.select-file-btn {
+    display: inline-block;
+    padding: 10px 24px;
+    background: #6366f1;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.select-file-btn:hover {
+    background: #4f46e5;
+}
+
+.upload-divider {
+    height: 1px;
+    background: #e2e8f0;
+    margin: 0 40px;
+}
+
+.rules-upload-section {
+    padding: 24px 40px;
+}
+
+.rules-upload-section h3 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1f2933;
+}
+
+.rules-upload-section p {
+    margin: 0 0 14px;
+    font-size: 13px;
+    color: #64748b;
+}
+
+.optional-tag {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 8px;
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 999px;
+    vertical-align: middle;
+}
+
+
+.rules-builder-link {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #6366f1;
+    text-decoration: none;
+}
+
+.rules-builder-link:hover {
+    text-decoration: underline;
+}
+
+.upload-submit-section {
+    padding: 0 40px 32px;
+}
+
+.analyse-btn {
+    width: 100%;
+    padding: 14px;
+    background: #6366f1;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.analyse-btn:hover {
+    background: #4f46e5;
+}
+
+.analyse-btn:disabled {
+    background: #a5b4fc;
+    cursor: not-allowed;
+}
+
+/* centred link row between rules drop zone and submit button */
+.rules-builder-section {
+    padding: 16px 40px;
+    text-align: center;
+}
+
+.rules-builder-section p {
+    margin: 0;
+    font-size: 13px;
+    color: #64748b;
+}
+
