@@ -900,3 +900,58 @@ a.navbar-logo {
 .preview-download-btn:hover {
     background: #4f46e5;
 }
+
+/* --- Data Preview Table --- */
+
+.preview-table-wrapper {
+    overflow-x: auto;
+    margin-top: 8px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+.preview-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    white-space: nowrap;   
+}
+
+.preview-table th {
+    padding: 10px 14px;
+    background: #f8fafc;
+    border-bottom: 2px solid #e2e8f0;
+    text-align: left;
+    font-weight: 700;
+    color: #374151;
+}
+
+.preview-table td {
+    padding: 9px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #1f2933;
+}
+
+
+.preview-table tr:last-child td {
+    border-bottom: none;
+}
+
+
+.preview-table tbody tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+
+.preview-table td:empty::after,
+.preview-table td.cell-empty {
+    content: "—";
+    color: #cbd5e1;
+}
+
+.preview-caption {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #94a3b8;
+}
+

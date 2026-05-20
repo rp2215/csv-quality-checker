@@ -187,3 +187,31 @@ def test_get_quality_score_label_poor():
     # <50 
     assert get_quality_score_label(49) == "Poor"
     assert get_quality_score_label(0) == "Poor"
+
+def test_get_data_preview_returns_correct_shape():
+
+    # should return first 5 rows with column names and total row count
+    dataframe = pd.DataFrame({
+        "name": ["Alice", "Bob", "Charlie", "Dan", "Eve", "Frank"],
+        "age": [30, 25, 35, 28, 22, 40],
+    })
+
+    from quality_check import get_data_preview
+    result = get_data_preview(dataframe)
+
+    assert result["preview_count"] == 5          # only first 5 of 6 rows
+    assert result["total_rows"] == 6
+    assert result["columns"] == ["name", "age"]
+    assert result["rows"][0]["name"] == "Alice"
+
+
+def test_get_data_preview_replaces_nan_with_empty_string():
+
+    import numpy as np
+    dataframe = pd.DataFrame({"score": [1.0, np.nan, 3.0]})
+
+    from quality_check import get_data_preview
+    result = get_data_preview(dataframe)
+
+    # NaN should become empty string, not "nan"
+    assert result["rows"][1]["score"] == ""

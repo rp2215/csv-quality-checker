@@ -161,6 +161,44 @@
 
                     </div>
 
+                    <h3>Data Preview</h3>
+
+                    <div class="preview-table-wrapper">
+                        <table class="preview-table">
+
+                            <thead>
+                                <tr>
+                                    {% for col in file_result["results"]["data_preview"]["columns"] %}
+                                        <th>{{ col }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for row in file_result["results"]["data_preview"]["rows"] %}
+                                    <tr>
+                                        {% for col in file_result["results"]["data_preview"]["columns"] %}
+                                            {% set cell = row[col] %}
+                                            {% if cell == "" %}
+                                                <!-- empty cell gets a class so CSS can show a dash -->
+                                                <td class="cell-empty"></td>
+                                            {% else %}
+                                                <td>{{ cell }}</td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                    <p class="preview-caption">
+                        Showing {{ file_result["results"]["data_preview"]["preview_count"] }}
+                        of {{ file_result["results"]["data_preview"]["total_rows"] }} rows
+                    </p>
+
+
                     <h3>Quality Charts</h3>
                     
                     <!-- overall quality score gauge -->

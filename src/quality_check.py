@@ -91,6 +91,21 @@ def get_numeric_summaries(dataframe):
         }
     return numeric_summaries
 
+# return rows as list of dicts for display in reports
+def get_data_preview(dataframe, num_rows=5):
+
+    preview_df = dataframe.head(num_rows)
+    columns = list(preview_df.columns)
+
+    rows = preview_df.fillna("").to_dict(orient="records")
+
+    return {
+        "columns": columns,
+        "rows": rows,
+        "total_rows": len(dataframe),   # used to show "5 of 1000 rows"
+        "preview_count": len(rows),     # actual rows returned 
+    }
+
 
 def calculate_column_quality_scores(dataframe):
 
@@ -160,7 +175,8 @@ def run_quality_checks(dataframe, thresholds = None):
         "duplicate_column_names": detect_duplicate_column_names(dataframe),
         "column_quality_scores": calculate_column_quality_scores(dataframe),
         "overall_quality_score": overall_quality_score,
-        "overall_quality_label": get_quality_score_label(overall_quality_score)
+        "overall_quality_label": get_quality_score_label(overall_quality_score),
+        "data_preview": get_data_preview(dataframe),
     }
 
     results["warnings"] = generate_warnings(results, thresholds) # store generated warnings
